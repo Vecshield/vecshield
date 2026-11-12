@@ -8,7 +8,7 @@
 #
 # For a deployment image, use the root Dockerfile. See docs/deployment.md.
 
-FROM python:3.12-slim
+FROM python:3.15-slim
 
 ENV PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
