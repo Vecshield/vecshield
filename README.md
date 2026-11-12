@@ -17,6 +17,7 @@
 
 <p align="center">
   <a href="demo/README.md">Demo</a> ·
+  <a href="docs/overview.md">Technical overview</a> ·
   <a href="docs/README.md">Docs</a> ·
   <a href="docs/architecture.md">Architecture</a> ·
   <a href="CONTRIBUTING.md">Contributing</a>

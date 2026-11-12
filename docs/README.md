@@ -14,7 +14,8 @@ VecShield ships two Python packages from one distribution:
 
 | Doc | What it covers |
 |---|---|
-| [Demo walkthrough](../demo/README.md) | A seeded estate and the console, in one command. Start here. |
+| [Technical overview](overview.md) | What VecShield is, the problem it addresses, and the commitments behind its design. Start here. |
+| [Demo walkthrough](../demo/README.md) | A seeded estate and the console, in one command. |
 | [Library overview](library/overview.md) | What the detection library does and does not do. |
 | [Deployment](deployment.md) | Running the server: Docker, Kubernetes, bare metal, air-gapped. |
 
