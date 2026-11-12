@@ -336,6 +336,15 @@ def test_installed_transformer_model_missing_its_runtime_is_not_ready(monkeypatc
 def test_status_is_unverified_until_a_load_succeeds(monkeypatch):
     monkeypatch.setenv("VECSHIELD_NLP_MODEL", "en_core_web_sm")
     monkeypatch.setattr(detection, "_model_installed", lambda model: True)
+    # `detection_status` counts spacy and presidio-analyzer towards "available",
+    # so without this the status here would depend on whether the optional
+    # `nlp` extra happens to be installed: unverified for a developer who has
+    # it, degraded in CI, which installs only `[dev,chroma]`.
+    real_version = detection._version
+    monkeypatch.setattr(
+        detection, "_version",
+        lambda package: real_version(package) or (
+            "0.0-test" if package in ("spacy", "presidio-analyzer") else None))
     before = detection.detection_status()
     assert before["status"] == "unverified"
     assert before["nlp_available"] is True and before["nlp_loaded"] is False

@@ -27,13 +27,16 @@ them with that store's client; nothing here imports a store SDK.
 from __future__ import annotations
 
 import html
+import json
 import re
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 from typing import Any, Callable, Optional, Union
 
 import numpy as np
 
+import vecshield_platform
 from vecshield_platform.coverage import capability_limited, not_requested, summarize_coverage
 
 DIM = 32
@@ -228,14 +231,41 @@ RUN_OUTCOMES: dict[str, Expected] = {
     "cve": "inconclusive",                 # offline by request
 }
 
+def _bundled_feed_is_fresh() -> bool:
+    """Whether the advisory feed shipped in the tree is inside its freshness window.
+
+    The feed is a snapshot committed to the repository, so it ages with the
+    calendar. Once it passes ``DEFAULT_MAX_AGE_DAYS`` the version-matching
+    checks report themselves incomplete, which is the correct behaviour --
+    matching a version against a stale feed is not a finished CVE check -- and
+    which this contract therefore has to expect rather than fail on. Pinning
+    the expectation to today's date keeps the contract honest in both states
+    instead of quietly rotting on a fixed calendar day.
+    """
+    from vecshield_platform.posture.server_vulns import DEFAULT_MAX_AGE_DAYS
+
+    seed = (Path(vecshield_platform.__file__).parent
+            / "posture" / "data" / "vulnfeed_seed.json")
+    try:
+        updated = json.loads(seed.read_text())["updated_at"]
+        stamped = datetime.fromisoformat(updated.replace("Z", "+00:00"))
+    except (OSError, KeyError, ValueError):
+        return False
+    age_days = (datetime.now(timezone.utc) - stamped).total_seconds() / 86400
+    return age_days <= DEFAULT_MAX_AGE_DAYS
+
+
 #: Checks the request leaves incomplete on any store: pattern-only detection
 #: cannot cover names and places (and the representation checks inherit the
-#: classification's coverage), and the CVE lookup is offline.
+#: classification's coverage), and the CVE lookup is offline. When the bundled
+#: advisory feed has aged out of its freshness window, the checks that match a
+#: version against it are incomplete too.
 RUN_INCOMPLETE = {
     "nlp_classification", "cve",
     *((check, collection) for collection in (CLEAN, PLANTED)
       for check in ("data_classification", "data_representation",
                     "pan_representation", "direct_identifier_exposure")),
+    *(() if _bundled_feed_is_fresh() else ("server_vulnerability",)),
 }
 
 #: Finding title prefix -> planted chunk ids its evidence must name.

@@ -185,6 +185,27 @@ def test_allow_list_and_entities_resolve_from_the_environment(monkeypatch, tmp_p
     assert resolve_allow_list() == {"taylor swift", "orion studio", "alexa"}
 
 
+#: The optional NLP packages. `detection_status` treats them as part of
+#: "available", so a test about the warm-up state machine would otherwise
+#: report a different status depending on whether the `nlp` extra happens to be
+#: installed in the environment running it -- passing locally for a developer
+#: who has it and failing in CI, which installs only `[dev,chroma]`.
+_NLP_PACKAGES = ("spacy", "presidio-analyzer")
+
+
+def _nlp_dependencies_present(monkeypatch):
+    """Report the optional NLP packages as installed, whatever is really there.
+
+    Only the dependency lookup is faked. The model, its requirements and the
+    load itself are still whatever the individual test sets up.
+    """
+    real_version = detection._version
+    monkeypatch.setattr(
+        detection, "_version",
+        lambda package: real_version(package) or (
+            "0.0-test" if package in _NLP_PACKAGES else None))
+
+
 def test_bad_nlp_configuration_is_reported_not_ignored(monkeypatch, tmp_path):
     monkeypatch.setenv("VECSHIELD_NLP_MODE", "auto")
     monkeypatch.setattr(detection, "_model_installed", lambda model: True)
@@ -216,6 +237,7 @@ def test_allow_listed_span_is_dropped_by_the_presidio_adapter():
 
 def test_warm_up_reads_loading_then_ready(monkeypatch):
     monkeypatch.setenv("VECSHIELD_NLP_MODE", "required")
+    _nlp_dependencies_present(monkeypatch)
     monkeypatch.setattr(detection, "_model_installed", lambda model: True)
     monkeypatch.setattr(detection, "_missing_requirements", lambda model: [])
     release = threading.Event()
@@ -239,6 +261,7 @@ def test_warm_up_reads_loading_then_ready(monkeypatch):
 
 def test_failed_required_warm_up_reads_unavailable_with_the_reason(monkeypatch):
     monkeypatch.setenv("VECSHIELD_NLP_MODE", "required")
+    _nlp_dependencies_present(monkeypatch)
     monkeypatch.setattr(detection, "_model_installed", lambda model: True)
     monkeypatch.setattr(detection, "_missing_requirements", lambda model: [])
 
