@@ -1,0 +1,86 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+sdist/
+wheels/
+*.egg-link
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+.env
+.env.*
+
+# Node (the console's test dependencies)
+node_modules/
+
+# Testing
+.pytest_cache/
+.tox/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+*.log
+*.junit.xml
+
+# Type checking / linting
+.mypy_cache/
+.ruff_cache/
+.pytype/
+
+# IDEs / OS
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Runtime and demo state. The demo seeds into whatever --state points at; the
+# server writes its history, alerts and audit log under --state-dir.
+.demo/
+demo-state/
+state/
+chroma_data/
+*.chroma/
+*.db
+*.sqlite
+*.sqlite3
+*.state/
+
+# Secrets and credentials. Belt and braces: nothing here should ever be
+# written into the tree in the first place.
+*.pem
+*.key
+*.p12
+*.pfx
+.secrets
+secrets.json
+credentials.json
+service_account.json
+
+# Distribution artefacts
+*.tar.gz
+*.whl
+*.zip
+
+# Benchmark output. The committed baselines (benchmark/baseline*.json,
+# benchmark/calibration*.json) are tracked on purpose; a fresh run is not.
+benchmark/results.json
+benchmark/results.nlp.json
+
+# The console the server actually serves is checked in: it is a source
+# artefact, not build output, so it must survive the `dist/` rule above.
+!vecshield_platform/api/dashboard/dist/
+!vecshield_platform/api/dashboard/dist/**

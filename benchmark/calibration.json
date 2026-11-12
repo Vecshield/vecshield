@@ -1,0 +1,137 @@
+{
+  "thresholds": {
+    "likely": 0.9,
+    "possible": 0.5
+  },
+  "detectors": {
+    "aws_access_key": {
+      "class": "possible",
+      "reason": "Precision 0.923 with a lower bound of 0.667, at or above the 0.5 floor for 'possible'.",
+      "precision": {
+        "observations": 13,
+        "measured": true,
+        "value": 0.923,
+        "interval": [
+          0.667,
+          0.986
+        ],
+        "successes": 12
+      }
+    },
+    "aws_secret_access_key_context": {
+      "class": "uncertain",
+      "reason": "Only 1 independent case(s); too few to measure a precision."
+    },
+    "card_like_number": {
+      "class": "uncertain",
+      "reason": "Only 3 independent case(s); too few to measure a precision."
+    },
+    "credit_card": {
+      "class": "uncertain",
+      "reason": "Only 3 independent case(s); too few to measure a precision."
+    },
+    "database_url_credentials": {
+      "class": "uncertain",
+      "reason": "Only 1 independent case(s); too few to measure a precision."
+    },
+    "delimiter_injection": {
+      "class": "uncertain",
+      "reason": "Only 1 independent case(s); too few to measure a precision."
+    },
+    "email": {
+      "class": "uncertain",
+      "reason": "Only 2 independent case(s); too few to measure a precision."
+    },
+    "encoded_payload": {
+      "class": "uncertain",
+      "reason": "Only 1 independent case(s); too few to measure a precision."
+    },
+    "encoding_evasion": {
+      "class": "possible",
+      "reason": "Precision 1.0 with a lower bound of 0.566, at or above the 0.5 floor for 'possible'.",
+      "precision": {
+        "observations": 5,
+        "measured": true,
+        "value": 1.0,
+        "interval": [
+          0.566,
+          1.0
+        ],
+        "successes": 5
+      }
+    },
+    "exfiltration": {
+      "class": "possible",
+      "reason": "Precision 1.0 with a lower bound of 0.722, at or above the 0.5 floor for 'possible'.",
+      "precision": {
+        "observations": 10,
+        "measured": true,
+        "value": 1.0,
+        "interval": [
+          0.722,
+          1.0
+        ],
+        "successes": 10
+      }
+    },
+    "github_token": {
+      "class": "uncertain",
+      "reason": "Only 1 independent case(s); too few to measure a precision."
+    },
+    "hidden_content": {
+      "class": "uncertain",
+      "reason": "Only 1 independent case(s); too few to measure a precision."
+    },
+    "instruction_override": {
+      "class": "possible",
+      "reason": "Precision 1.0 with a lower bound of 0.741, at or above the 0.5 floor for 'possible'.",
+      "precision": {
+        "observations": 11,
+        "measured": true,
+        "value": 1.0,
+        "interval": [
+          0.741,
+          1.0
+        ],
+        "successes": 11
+      }
+    },
+    "medical_record_context": {
+      "class": "uncertain",
+      "reason": "Only 1 independent case(s); too few to measure a precision."
+    },
+    "policy_bypass": {
+      "class": "uncertain",
+      "reason": "Only 1 independent case(s); too few to measure a precision."
+    },
+    "retrieval_manipulation": {
+      "class": "uncertain",
+      "reason": "Only 2 independent case(s); too few to measure a precision."
+    },
+    "role_manipulation": {
+      "class": "uncertain",
+      "reason": "Only 4 independent case(s); too few to measure a precision."
+    },
+    "street_name_context": {
+      "class": "uncertain",
+      "reason": "Only 1 independent case(s); too few to measure a precision."
+    },
+    "stripe_api_key": {
+      "class": "uncertain",
+      "reason": "Only 1 independent case(s); too few to measure a precision."
+    },
+    "system_impersonation": {
+      "class": "uncertain",
+      "reason": "Only 2 independent case(s); too few to measure a precision."
+    },
+    "tool_abuse": {
+      "class": "uncertain",
+      "reason": "Only 1 independent case(s); too few to measure a precision."
+    },
+    "us_ssn": {
+      "class": "uncertain",
+      "reason": "Only 1 independent case(s); too few to measure a precision."
+    }
+  },
+  "note": "A class is earned from the lower bound of a measured precision, not its point estimate. A detector that has earned nothing reports 'uncertain' and says why."
+}

@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "verified_on": "2026-09-29",
+  "note": "Suggestions a customer may cite when declaring a retention rule. VecShield never applies one automatically, and a reference is not legal advice about whether it reaches the customer. Where a reference sets no number, suggested_rule.max_age_days is null and the customer must choose the period. Where the legal clock is not record time (last interaction, last use), a record-time age is an upper bound on the legal age: exceeding it means 'check the legal clock for these records', not 'this record is over the limit'.",
+  "references": [
+    {
+      "id": "pci_dss_4_0_1_req_3_2_1",
+      "title": "PCI DSS v4.0.1 Requirement 3.2.1",
+      "jurisdiction": "PCI SSC (contractual standard)",
+      "citation": "PCI DSS v4.0.1, Requirement 3.2.1",
+      "kind": "policy_required",
+      "summary": "Stored account data is kept to a minimum through retention and disposal policies that define a retention period with a documented business justification, and a process verifies at least once every three months that stored account data exceeding the defined retention period has been securely deleted or rendered unrecoverable.",
+      "excerpt": "A process for verifying, at least once every three (3) months, that stored account data exceeding the defined retention period has been securely deleted or rendered unrecoverable.",
+      "source_url": "https://www.pcisecuritystandards.org/document_library/",
+      "secondary_source_url": "https://trustedsec.com/blog/pci-dss-payment-card-data-retention",
+      "verification": "Requirement text confirmed through a secondary source that quotes it in full; the standard itself is distributed from the PCI SSC document library after accepting its license, which was not fetched.",
+      "suggested_rule": {"category": "pci", "max_age_days": null, "clock": "record_time", "review_interval_days": 90},
+      "clock_note": "The standard sets no period. The customer defines it; the quarterly verification is what this check can evidence."
+    },
+    {
+      "id": "coppa_16_cfr_312_10",
+      "title": "COPPA Rule 16 CFR 312.10 (as amended 2025)",
+      "jurisdiction": "US (FTC)",
+      "citation": "16 CFR 312.10",
+      "kind": "policy_required",
+      "summary": "Children's personal information is retained only as long as reasonably necessary for the specific purpose collected, may not be retained indefinitely, and the operator maintains a written data retention policy stating purposes, business need and a timeframe for deletion. The amended rule was published 2025-04-22, effective 2025-06-23, with a compliance date of 2026-04-22.",
+      "excerpt": "Personal information collected online from a child may not be retained indefinitely.",
+      "source_url": "https://www.law.cornell.edu/cfr/text/16/312.10",
+      "secondary_source_url": "https://www.federalregister.gov/documents/2025/04/22/2025-05904/childrens-online-privacy-protection-rule",
+      "effective_date": "2025-06-23",
+      "compliance_date": "2026-04-22",
+      "suggested_rule": {"category": "minor", "max_age_days": null, "clock": "record_time"},
+      "clock_note": "The rule requires a written timeframe for deletion but sets no number. 'minor' is the classifier's children's-data qualifier; it is a signal of a child's data, not proof that COPPA applies (COPPA covers operators collecting online from children under 13)."
+    },
+    {
+      "id": "ccpa_1798_100_a_3",
+      "title": "CCPA retention disclosure and limit (Cal. Civ. Code 1798.100(a)(3))",
+      "jurisdiction": "US-CA",
+      "citation": "Cal. Civ. Code 1798.100(a)(3); CCPA Regulations 11 CCR 7012(e)(4) and 7152(a)(3)(B)",
+      "kind": "policy_required",
+      "summary": "A business discloses how long it intends to retain each category of personal information (or the criteria used) and may not retain it longer than reasonably necessary for each disclosed purpose. The regulations require the same per-category period in the Notice at Collection (7012(e)(4)) and in any risk assessment report (7152(a)(3)(B)).",
+      "excerpt": "How long the business plans to retain each category of personal information, or if unknown, the criteria the business plans to use to determine that retention period.",
+      "source_url": "https://cppa.ca.gov/pdf/20260101_ccpa_statute.pdf",
+      "secondary_source_url": "https://cppa.ca.gov/regulations/pdf/ccpa_statute_eff_20260101.pdf",
+      "suggested_rule": {"category": "pii", "max_age_days": null, "clock": "record_time"},
+      "clock_note": "Per-category periods are the business's own. Declare one rule per category it disclosed (pii, special_category for sensitive personal information, ...)."
+    },
+    {
+      "id": "bipa_740_ilcs_14_15_a",
+      "title": "Illinois BIPA 740 ILCS 14/15(a)",
+      "jurisdiction": "US-IL",
+      "citation": "740 ILCS 14/15(a)",
+      "kind": "maximum",
+      "summary": "A private entity holding biometric identifiers or information publishes a written retention schedule and destroys them when the initial purpose is satisfied or within 3 years of the individual's last interaction, whichever occurs first.",
+      "excerpt": "when the initial purpose for collecting or obtaining such identifiers or information has been satisfied or within 3 years of the individual's last interaction with the private entity, whichever occurs first.",
+      "source_url": "https://www.ilga.gov/legislation/ilcs/ilcs3.asp?ActID=3004&ChapterID=57",
+      "secondary_source_url": "https://codes.findlaw.com/il/chapter-740-civil-liabilities/il-st-sect-740-14-15/",
+      "suggested_rule": {"category": "biometric_reference", "max_age_days": 1095, "clock": "record_time"},
+      "clock_note": "The statutory clock is the individual's last interaction, not when the record was written, and the store does not record last interaction. Enrolling the template is itself an interaction, so the last interaction is never earlier than the record time and record-time age is never shorter than the time since that interaction: a record-time exceedance means 'confirm the last-interaction date for these records', not a breach. The purpose-satisfied trigger can end retention sooner."
+    },
+    {
+      "id": "gdpr_art_5_1_e",
+      "title": "GDPR Article 5(1)(e) storage limitation",
+      "jurisdiction": "EU/EEA",
+      "citation": "Regulation (EU) 2016/679, Art. 5(1)(e)",
+      "kind": "policy_required",
+      "summary": "Personal data is kept in identifiable form no longer than necessary for the purposes of processing; longer storage only for archiving in the public interest, research or statistics with safeguards.",
+      "excerpt": "kept in a form which permits identification of data subjects for no longer than is necessary for the purposes for which the personal data are processed",
+      "source_url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj",
+      "secondary_source_url": "https://gdpr-info.eu/art-5-gdpr/",
+      "suggested_rule": {"category": "pii", "max_age_days": null, "clock": "record_time"},
+      "clock_note": "No number. The controller sets the period per purpose; declare it here to have it evaluated."
+    },
+    {
+      "id": "glba_16_cfr_314_4_c_6",
+      "title": "GLBA Safeguards Rule 16 CFR 314.4(c)(6)",
+      "jurisdiction": "US (FTC, financial institutions)",
+      "citation": "16 CFR 314.4(c)(6)(i)-(ii)",
+      "kind": "maximum",
+      "summary": "Procedures for secure disposal of customer information no later than two years after the last date it is used in connection with the product or service, unless necessary for business operations or other legitimate purposes, required by law, or targeted disposal is not reasonably feasible; periodic review of the retention policy.",
+      "excerpt": "no later than two years after the last date the information is used in connection with the provision of a product or service to the customer to which it relates",
+      "source_url": "https://www.law.cornell.edu/cfr/text/16/314.4",
+      "suggested_rule": {"category": "pii", "max_age_days": 730, "clock": "record_time"},
+      "clock_note": "The clock is last use for the customer, and the rule has exceptions (business necessity, legal requirement, infeasible targeted disposal). Record-time age is an upper bound; an exceedance means 'confirm last use or the exception that applies'. Applies to customer information held by financial institutions under FTC jurisdiction."
+    },
+    {
+      "id": "hipaa_45_cfr_164_316_b_2",
+      "title": "HIPAA 45 CFR 164.316(b)(2)(i) (not a data retention limit)",
+      "jurisdiction": "US (HHS)",
+      "citation": "45 CFR 164.316(b)(2)(i)",
+      "kind": "clarification",
+      "summary": "The six-year period is how long a covered entity or business associate keeps its Security Rule documentation (policies, procedures, records of required actions). It is not a maximum or minimum retention period for PHI itself; HIPAA sets no general retention limit for health data.",
+      "excerpt": "Retain the documentation required by paragraph (b)(1) of this section for 6 years from the date of its creation or the date when it last was in effect, whichever is later.",
+      "source_url": "https://www.law.cornell.edu/cfr/text/45/164.316",
+      "suggested_rule": null,
+      "clock_note": "Do not declare a 6-year PHI maximum on the strength of this citation. PHI retention periods come from state medical-records law and the customer's own policy."
+    }
+  ]
+}

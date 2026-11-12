@@ -1,0 +1,169 @@
+[project]
+name = "vecshield"
+version = "0.1.0"
+description = "Security and compliance scanning for vector databases and RAG pipelines"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{ name = "VecShield contributors" }]
+keywords = [
+    "rag", "vector-database", "security", "compliance", "pii",
+    "prompt-injection", "gdpr", "hipaa", "pci-dss",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+    "Topic :: Software Development :: Quality Assurance",
+]
+dependencies = [
+    # `vecshield` (the detection library) and `vecshield_platform` (the server,
+    # connectors and CLI) ship together from this one distribution.
+    "click>=8.1",
+    "rich>=13.0",
+    "rich-click>=1.8,<2",
+    "numpy>=1.24",
+    "fastapi>=0.110",
+    "uvicorn>=0.27",
+]
+
+[project.optional-dependencies]
+# Managed vector-store connectors (install only what you deploy).
+chroma = ["chromadb>=0.5"]
+pgvector = ["psycopg[binary]>=3.1"]
+qdrant = ["qdrant-client>=1.10"]
+weaviate = ["weaviate-client>=4.7"]
+milvus = ["pymilvus>=2.4", "milvus-lite>=2.4"]
+pinecone = ["pinecone>=5.0"]
+redis = ["redis>=5.0"]
+opensearch = ["opensearch-py>=2.4"]
+mongodb = ["pymongo>=4.10"]
+openai = ["openai>=1.66"]
+azure = ["azure-search-documents>=11.4"]
+bedrock = ["boto3>=1.34"]
+vertex = ["google-cloud-aiplatform>=1.40"]
+# Managed cloud data sources for continuous training-data scanning.
+datasources = ["boto3>=1.28", "google-cloud-storage>=2.0",
+               "azure-storage-blob>=12.0", "datasets>=2.0", "pyarrow>=12.0",
+               "pdfminer.six>=20221105"]
+# Higher-recall detection (names, addresses, locations, PHI) via Presidio + spaCy.
+nlp = ["presidio-analyzer>=2.2", "spacy>=3.7"]
+# Runtime for the Enterprise default model (en_core_web_trf 3.8.0, curated
+# transformers). Pulls PyTorch; torch>=2.6 keeps weights_only loading as
+# defence in depth behind the model's hash pin. The model wheel itself is
+# installed with `vecshield-platform nlp install`; see docs/nlp_models.md.
+nlp-trf = ["presidio-analyzer>=2.2,<2.3", "spacy>=3.8,<3.9",
+           "spacy-curated-transformers>=0.2.2,<1.0", "torch>=2.6,<2.15"]
+# Deprecated alias of nlp-trf, kept so existing install commands keep working.
+# It used to pull spacy-transformers for en_core_web_hftrf, which no released
+# spacy-transformers can load (see docs/nlp_models.md).
+nlp-transformer = ["presidio-analyzer>=2.2,<2.3", "spacy>=3.8,<3.9",
+                   "spacy-curated-transformers>=0.2.2,<1.0", "torch>=2.6,<2.15"]
+# Runtime for the slim image's model (en_core_web_lg): no PyTorch.
+nlp-lg = ["presidio-analyzer>=2.2,<2.3", "spacy>=3.8,<3.9"]
+# Everything the bundled demo estate needs. Seeds into a local Chroma
+# directory; no Docker, no network, no API keys. See demo/README.md.
+demo = ["chromadb>=0.5"]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "httpx>=0.27",
+    "ruff>=0.6",
+    "mypy>=1.11",
+]
+# Container-backed integration tests (opt-in / nightly). Requires a running
+# Docker daemon; see tests/integration/README for the run instructions.
+integration = ["testcontainers>=4.0"]
+
+[project.urls]
+Homepage = "https://github.com/vecshield/vecshield"
+Documentation = "https://github.com/vecshield/vecshield/blob/main/docs/README.md"
+Source = "https://github.com/vecshield/vecshield"
+Issues = "https://github.com/vecshield/vecshield/issues"
+Changelog = "https://github.com/vecshield/vecshield/blob/main/CHANGELOG.md"
+
+[project.scripts]
+vecshield-platform = "vecshield_platform.cli:cli"
+vecshield = "vecshield.cli:cli"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["vecshield_platform*", "vecshield", "vecshield.*"]
+
+[tool.setuptools.package-data]
+vecshield = ["py.typed", "LICENSE", "NOTICE"]
+vecshield_platform = [
+    "api/dashboard/dist/*.html",
+    "api/dashboard/dist/assets/*.css",
+    "api/dashboard/dist/assets/*.js",
+    "api/dashboard/dist/assets/*.svg",
+    "api/dashboard/dist/assets/*.png",
+    "api/dashboard/dist/assets/fonts/*.woff2",
+    "api/dashboard/dist/assets/fonts/*.txt",
+    "api/dashboard/dist/assets/fonts/*.md",
+    "compliance/data/*.json",
+    "posture/data/*.json",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# The repository root, so tests can import the uninstalled `benchmarks`
+# package under a bare `pytest` (as CI runs it), not only `python -m pytest`.
+pythonpath = ["."]
+# Integration tests are opt-in: they require Docker and are excluded from the
+# default run. Select them explicitly with `-m integration`.
+addopts = "-m 'not integration'"
+markers = [
+    "integration: container-backed tests that need a running Docker daemon",
+    "nlp_model: loads a real, installed spaCy model with no mocks; skipped when the model is absent",
+]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+extend-exclude = ["vecshield_platform/api/dashboard/dist", "examples"]
+
+[tool.ruff.lint]
+# High-signal gate: pyflakes (real bugs — undefined names, unused imports,
+# redefinitions) plus syntax errors. This is enforced in CI and is green today.
+# Stylistic families (import sorting `I`, `pyupgrade`, `flake8-bugbear`) are
+# intentionally left out of the enforced set for now to avoid a large one-shot
+# reformat; enable them incrementally as the codebase is brought up to style.
+select = ["F", "E9"]
+ignore = [
+    "B008",  # FastAPI's Depends(...) defaults are an intentional idiom
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests favour local imports after importorskip guards and reuse fixtures.
+"tests/*" = ["E402", "F811"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_unused_ignores = true
+warn_redundant_casts = true
+# Pragmatic entry point: the codebase is not yet fully annotated, so start
+# lenient and tighten over time rather than blocking CI on a large backlog.
+ignore_missing_imports = true
+check_untyped_defs = false
+exclude = ["tests/", "vecshield_platform/api/dashboard/dist/", "examples/"]
+
+[tool.coverage.run]
+source = ["vecshield_platform", "vecshield"]
+omit = ["*/tests/*"]
+
+[tool.coverage.report]
+show_missing = true
+# Conservative floor: catches catastrophic drops without flaking when optional
+# connector SDKs (and their tests) are absent in a given CI matrix. Local runs
+# with the full extras sit around 75%; raise this as coverage improves.
+fail_under = 60

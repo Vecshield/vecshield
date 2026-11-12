@@ -1,0 +1,14 @@
+# Pinned for reproducible ai4privacy benchmark runs.
+# Core harness (regex mode) needs only datasets + the local vecshield install.
+datasets>=2.19,<3.0
+pyarrow>=15.0
+
+# Optional: NLP mode (Presidio + spaCy). Install the spaCy model separately:
+#   python -m spacy download en_core_web_lg
+# presidio-analyzer>=2.2
+# spacy>=3.7
+
+# Optional: results notebook / dashboards.
+# pandas>=2.0
+# matplotlib>=3.8
+# seaborn>=0.13

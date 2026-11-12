@@ -1,0 +1,45 @@
+{
+  "collections": {
+    "billing_disputes_rag": 33,
+    "crm_account_notes_rag": 39,
+    "help_center_public_kb": 30,
+    "inbound_email_rag": 72,
+    "internal_runbooks_rag": 24,
+    "support_ticket_rag": 94
+  },
+  "created_epoch": 1783382400,
+  "dataset_id": "acmedesk_support_email_v1",
+  "embedding_dimension": 384,
+  "generated_at": "2026-07-07T00:00:00Z",
+  "manifest_cases": [
+    "case_01_pii_support_ticket",
+    "case_02_payment_data_billing",
+    "case_03_credentials_mfa",
+    "case_04_api_keys_jwt_logs",
+    "case_05_private_key_runbook",
+    "case_06_cross_tenant_leakage",
+    "case_07_stored_prompt_injection",
+    "case_08_deletion_impact_maya_brooks",
+    "case_09_runtime_query_abuse",
+    "case_10_ingest_firewall"
+  ],
+  "risk_tag_counts": {
+    "api_key": 1,
+    "cardholder_data": 1,
+    "ccpa_personal_information": 1,
+    "credential_pair": 1,
+    "crm_personal_info": 1,
+    "deletion_request": 1,
+    "dsar_subject": 5,
+    "exfiltration_instruction": 1,
+    "jwt": 1,
+    "mfa_recovery_code": 1,
+    "pci": 1,
+    "pii": 1,
+    "private_key": 1,
+    "secret": 2,
+    "stored_prompt_injection": 1,
+    "tenant_bleed_canary": 2
+  },
+  "synthetic_only": true
+}

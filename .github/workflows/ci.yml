@@ -1,0 +1,270 @@
+name: CI
+
+# Quality gate: lint -> type-check -> test + coverage, plus the console and
+# detector-benchmark gates. Integration tests (Docker/testcontainers) and the
+# real-model NLP job are opt-in and run nightly, never as blocking PR gates.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    # `labeled` lets the `nlp` label start the NLP model job on a PR.
+    types: [opened, synchronize, reopened, labeled]
+  # Nightly run for the (slow, Docker-backed) integration job.
+  schedule:
+    - cron: "0 3 * * *"
+  # Allow triggering the opt-in jobs on demand.
+  workflow_dispatch:
+
+# Cancel superseded runs on the same ref to save CI minutes.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: lint · type · test (py${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install
+        # The chroma extra pulls in the in-process store many unit tests
+        # exercise; without it whole suites skip rather than fail.
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev,chroma]"
+
+      - name: Lint (ruff)
+        run: ruff check .
+
+      - name: Type-check (mypy)
+        # Advisory for now: the codebase is being annotated incrementally, so a
+        # type error reports but does not fail the build yet. Tighten by
+        # removing continue-on-error once the backlog is cleared.
+        continue-on-error: true
+        run: mypy vecshield_platform
+
+      - name: Test + coverage
+        # -rs prints the skip reasons, so a run that went green only because an
+        # optional SDK was missing is visible in the log.
+        run: >-
+          pytest -rs
+          --cov=vecshield_platform --cov=vecshield
+          --cov-report=term-missing --cov-report=xml
+
+      - name: Detector benchmark
+        # Runs the labelled corpus and fails on a regression against the
+        # committed baseline. A detector that gets quietly worse is the failure
+        # this exists to catch.
+        run: |
+          python -m vecshield_platform.cli benchmark run \
+            --corpus benchmark/corpus --out benchmark/results.json
+          python -m vecshield_platform.cli benchmark compare \
+            --baseline benchmark/baseline.json --candidate benchmark/results.json \
+            --tolerance 0.02
+
+      - name: Confidence calibration
+        # A confidence class may only come from a measurement. This fails if
+        # the committed calibration claims more than the corpus supports,
+        # which is what a hand-edited claim looks like.
+        run: |
+          python -m vecshield_platform.cli benchmark calibrate \
+            --corpus benchmark/corpus --out benchmark/calibration.json --check
+
+      - name: Upload benchmark result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-${{ matrix.python-version }}
+          path: benchmark/results.json
+          if-no-files-found: ignore
+
+      - name: Upload coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ matrix.python-version }}
+          path: coverage.xml
+          if-no-files-found: ignore
+
+  console:
+    name: console (axe · contrast · behaviour)
+    # The console ships as checked-in static assets with no build step. Its
+    # behaviour and contrast gates need nothing but Node; the axe audit needs a
+    # DOM implementation, which is what the dev dependencies are for.
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: vecshield_platform/api/dashboard
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: vecshield_platform/api/dashboard/package-lock.json
+
+      - name: Install
+        run: npm ci --no-audit --no-fund
+
+      - name: Syntax check the shipped scripts
+        run: npm run check
+
+      - name: Console tests (behaviour, contrast, parity, accessibility)
+        run: npm test
+
+  demo:
+    name: demo (compose stack boots and serves)
+    # The demo is the project's front door. If `docker compose up` stops
+    # working, people bounce before they ever see the console, so it is a
+    # blocking gate rather than something checked by hand.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build and start the demo
+        working-directory: demo
+        run: docker compose up --build --detach
+
+      - name: Wait for the console to serve
+        working-directory: demo
+        # The first boot seeds the estate and runs its assessments, so allow
+        # several minutes before calling it a failure.
+        run: |
+          for i in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:8088/healthz > /dev/null 2>&1; then
+              echo "healthy after ${i}0s"
+              curl -fsS http://127.0.0.1:8088/healthz
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::the demo console did not become healthy"
+          docker compose logs --no-color | tail -100
+          exit 1
+
+      - name: The console shell is served
+        run: curl -fsS http://127.0.0.1:8088/ | grep -q "<!doctype html>"
+
+      - name: Stop
+        if: always()
+        working-directory: demo
+        run: docker compose down -v
+
+  integration:
+    name: integration (Docker · nightly)
+    # Container-backed tests are slow and need Docker; run them on a schedule or
+    # when manually dispatched, never as a blocking PR gate.
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev,integration,chroma,pgvector,qdrant,opensearch,redis]"
+
+      - name: Run integration tests
+        run: pytest -m integration -v
+
+  nlp:
+    name: NLP model (en_core_web_trf · nightly or `nlp` label)
+    # Loads the real default model with no mocks: the check that would have
+    # caught a default model no released package could load. Too heavy for
+    # every PR (PyTorch + a 460 MB model), so it runs nightly, on demand, or
+    # when a PR carries the `nlp` label.
+    if: >-
+      github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'nlp'))
+    runs-on: ubuntu-latest
+    env:
+      VECSHIELD_NER_MODELS: none
+      NLP_WHEELHOUSE: ${{ github.workspace }}/.nlp-wheelhouse
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install (CPU PyTorch, then the nlp-trf extra)
+        run: |
+          python -m pip install --upgrade pip
+          pip install --index-url https://download.pytorch.org/whl/cpu "torch>=2.6,<2.15"
+          pip install -e ".[dev,chroma,nlp-trf]"
+
+      - name: Cache model wheels
+        # Keyed on the catalog: a changed pin or hash fetches afresh.
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.NLP_WHEELHOUSE }}
+          key: nlp-wheels-${{ hashFiles('vecshield_platform/nlp_models.py') }}
+
+      - name: Fetch hash-pinned model wheels
+        run: |
+          if [ ! -f "$NLP_WHEELHOUSE/en_core_web_trf-3.8.0-py3-none-any.whl" ] || \
+             [ ! -f "$NLP_WHEELHOUSE/en_core_web_sm-3.8.0-py3-none-any.whl" ]; then
+            vecshield-platform nlp fetch "$NLP_WHEELHOUSE" en_core_web_trf en_core_web_sm
+          fi
+
+      - name: Install and verify the models offline
+        # --wheelhouse installs with --no-index; the wheels are still
+        # hash-checked, and each model is test-loaded in an offline interpreter.
+        run: vecshield-platform nlp install en_core_web_trf en_core_web_sm --wheelhouse "$NLP_WHEELHOUSE"
+
+      - name: Real-load tests (no mocks)
+        env:
+          VECSHIELD_NLP_TESTS_REQUIRE: en_core_web_trf,en_core_web_sm
+        run: |
+          pytest -rs tests/test_nlp_default_rollout.py \
+            tests/community/test_performance_improvements.py tests/test_nlp_models.py
+
+      - name: NLP detector benchmark
+        # A separate baseline: NLP changes what is flagged, so it is compared
+        # with its own committed run rather than the regex-only baseline.
+        env:
+          VECSHIELD_NLP_MODE: required
+          VECSHIELD_NLP_MODEL: en_core_web_trf
+        run: |
+          python -m vecshield_platform.cli benchmark run \
+            --corpus benchmark/corpus --out benchmark/results.nlp.json
+          python -m vecshield_platform.cli benchmark compare \
+            --baseline benchmark/baseline.nlp.json --candidate benchmark/results.nlp.json \
+            --tolerance 0.02
+          python -m vecshield_platform.cli benchmark calibrate \
+            --corpus benchmark/corpus --out benchmark/calibration.nlp.json --check
+
+      - name: Upload NLP benchmark result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-nlp
+          path: benchmark/results.nlp.json
+          if-no-files-found: ignore

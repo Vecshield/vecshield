@@ -1,0 +1,48 @@
+name: Detection false positive or false negative
+description: A detector fired when it should not have, or did not fire when it should have.
+labels: [detection]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Known gaps are already written up in
+        [docs/detection_limitations.md](../blob/main/docs/detection_limitations.md).
+        Please check there first — a documented limitation is better discussed
+        than re-reported.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Which way did it go wrong?
+      options:
+        - False positive (fired on something harmless)
+        - False negative (missed something sensitive)
+    validations: { required: true }
+  - type: textarea
+    id: sample
+    attributes:
+      label: A sample that shows it
+      description: >-
+        **Synthetic only.** Invent a value with the same shape rather than
+        pasting real data. If the shape itself is the point, describe it.
+    validations: { required: true }
+  - type: input
+    id: detector
+    attributes:
+      label: Detector name
+      description: From `vecshield detect`, the `detector` field on the span.
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Detection mode
+      options:
+        - Regex only (no NLP extra installed)
+        - Regex + NLP (Presidio/spaCy)
+        - Not sure
+    validations: { required: true }
+  - type: checkboxes
+    id: nosecrets
+    attributes:
+      label: Before you post
+      options:
+        - label: The sample above is synthetic, not real data.
+          required: true

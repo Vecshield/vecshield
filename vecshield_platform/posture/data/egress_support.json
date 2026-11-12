@@ -1,0 +1,135 @@
+{
+ "_about": "Per connector kind: whether the database can call a model on its own (store_side_models: true / false / 'unknown'), and the exact setting to change for each kind of model-egress finding. 'false' marks a product fact (capability_limit); 'unknown' is never read as 'no egress'. Remediation text names vendor settings verified against the cited documentation.",
+ "_as_of": "2026-09-29",
+ "stores": {
+  "weaviate": {
+   "database": "Weaviate",
+   "store_side_models": true,
+   "features": "Vectorizer (text2vec-*), reranker and generative modules call model providers from the server. All API-based modules are available by default from Weaviate v1.33.",
+   "remediation": {
+    "third_party": "Set the collection's vectorizer to none (Configure.Vectors.self_provided) and embed client-side, or switch to a self-hosted text2vec-transformers (or text2vec-ollama) module so text never leaves your network.",
+    "configured_unused": "Limit ENABLE_MODULES to the modules you use; from v1.33 API-based modules are enabled by default, so list the ones you need explicitly.",
+    "api_key_auth": "Pass provider keys per request as headers from the client rather than storing them in the server environment, and rotate any key that was stored."
+   },
+   "sources": ["https://docs.weaviate.io/weaviate/manage-collections/vector-config",
+               "https://docs.weaviate.io/weaviate/model-providers/transformers/embeddings",
+               "https://docs.weaviate.io/weaviate/configuration/modules"]
+  },
+  "azure_search": {
+   "database": "Azure AI Search",
+   "store_side_models": true,
+   "features": "Index vectorizers and indexer skills call Azure OpenAI or Foundry model endpoints at query and index time.",
+   "remediation": {
+    "third_party": "Point the vectorizer's resourceUri at an Azure OpenAI or Foundry resource in your own tenant and region, or remove the vectorizer and send query vectors from the client.",
+    "api_key_auth": "Remove apiKey from azureOpenAIParameters and leave authIdentity empty (system-assigned managed identity) or set it to a user-assigned identity with the Cognitive Services OpenAI User role.",
+    "configured_unused": "Delete vectorizers that no vector field's profile references."
+   },
+   "sources": ["https://learn.microsoft.com/en-us/azure/search/vector-search-vectorizer-azure-open-ai"]
+  },
+  "opensearch": {
+   "database": "OpenSearch",
+   "store_side_models": true,
+   "features": "ML Commons remote-model connectors call external model endpoints from the cluster (neural search, ingest processors).",
+   "remediation": {
+    "third_party": "Deploy the model locally in ML Commons, or point the connector at a model endpoint in your own cloud account, and remove connectors to third-party APIs.",
+    "trusted_endpoints": "Replace broad entries in plugins.ml_commons.trusted_connector_endpoints_regex with anchored HTTPS patterns for each approved host (for example ^https://bedrock-runtime\\..*[a-z0-9-]\\.amazonaws\\.com/.*$), and enable plugins.ml_commons.connector_access_control_enabled.",
+    "api_key_auth": "Prefer IAM-role credentials for AWS connectors over API keys held in connector credentials, and rotate stored keys.",
+    "configured_unused": "Delete connectors that no deployed model uses."
+   },
+   "sources": ["https://docs.opensearch.org/latest/ml-commons-plugin/remote-models/index/"]
+  },
+  "milvus": {
+   "database": "Milvus",
+   "store_side_models": true,
+   "features": "Embedding functions (Milvus 2.6+) call OpenAI, Azure OpenAI, DashScope, Bedrock, Vertex AI, Voyage AI, Cohere, SiliconFlow, Hugging Face and others at insert and search; credentials live in milvus.yaml.",
+   "remediation": {
+    "third_party": "Drop the collection's TEXTEMBEDDING function and insert client-computed vectors, or use a self-hosted Hugging Face TEI endpoint.",
+    "api_key_auth": "Move provider keys out of the milvus.yaml credential section into your secret manager, and rotate keys that were stored there.",
+    "configured_unused": "Remove unused entries under function.textEmbedding.providers."
+   },
+   "sources": ["https://milvus.io/docs/embedding-function-overview.md"]
+  },
+  "qdrant": {
+   "database": "Qdrant",
+   "store_side_models": true,
+   "features": "Qdrant Cloud Inference embeds with Qdrant-hosted models, or proxies to OpenAI, Cohere, Jina AI and OpenRouter with the caller's key. Enabled by default for clusters created after 7 July 2025.",
+   "remediation": {
+    "third_party": "Upsert and query with client-computed vectors instead of documents that name an external-provider model, or use a Qdrant-hosted model so no further provider receives the text."
+   },
+   "sources": ["https://qdrant.tech/documentation/cloud/inference/"]
+  },
+  "pinecone": {
+   "database": "Pinecone",
+   "store_side_models": true,
+   "features": "Integrated inference embeds and reranks with models hosted on Pinecone's own infrastructure.",
+   "remediation": {
+    "third_party": "Create the index without an integrated embedding model and upsert client-computed vectors."
+   },
+   "sources": ["https://docs.pinecone.io/guides/index-data/create-an-index",
+               "https://docs.pinecone.io/guides/index-data/indexing-overview"]
+  },
+  "mongodb": {
+   "database": "MongoDB",
+   "store_side_models": true,
+   "features": "Vector Search Automated Embedding (autoEmbed index fields) calls Voyage AI models at index and query time.",
+   "remediation": {
+    "third_party": "Replace the autoEmbed field in the Vector Search index with a vector field and store client-computed embeddings.",
+    "api_key_auth": "Prefer Atlas-managed Voyage AI keys over keys configured on self-managed mongot, and use separate keys for indexing and query as MongoDB recommends."
+   },
+   "sources": ["https://www.mongodb.com/docs/vector-search/crud-embeddings/automated-embedding/"]
+  },
+  "pgvector": {
+   "database": "PostgreSQL (pgvector)",
+   "store_side_models": true,
+   "features": "Extensions such as azure_ai (Azure Database for PostgreSQL) and Google Cloud SQL model endpoint management call model endpoints from SQL.",
+   "remediation": {
+    "third_party": "Compute embeddings in the application, or point the extension at a model endpoint in your own tenant.",
+    "api_key_auth": "Do not store provider keys with azure_ai.set_setting('azure_openai.subscription_key', ...); use a managed identity where the service supports it, and rotate stored keys."
+   },
+   "sources": ["https://learn.microsoft.com/en-us/azure/postgresql/azure-ai/generative-ai-azure-openai",
+               "https://docs.cloud.google.com/sql/docs/postgres/model-endpoint-register-model"]
+  },
+  "vertex_ai": {
+   "database": "Vertex AI Vector Search",
+   "store_side_models": true,
+   "features": "Vector Search 2.0 collections can autogenerate embeddings with a Vertex AI model (vertex_embedding_config). Vector Search 1.0 indexes take precomputed vectors only.",
+   "remediation": {
+    "third_party": "Vertex AI models run in your own project; no third party receives the text."
+   },
+   "sources": ["https://docs.cloud.google.com/vertex-ai/docs/vector-search-2/embeddings/autogenerating-embeddings"]
+  },
+  "bedrock_kb": {
+   "database": "Amazon Bedrock Knowledge Bases",
+   "store_side_models": true,
+   "features": "The knowledge base's embedding model (and any parsing or generation model) is a Bedrock model in your account.",
+   "remediation": {
+    "third_party": "Bedrock models run in your AWS account; check the data retention mode and any cross-region inference profile instead."
+   },
+   "sources": ["https://docs.aws.amazon.com/bedrock/latest/userguide/data-retention.html"]
+  },
+  "openai": {
+   "database": "OpenAI Vector Stores",
+   "store_side_models": true,
+   "features": "OpenAI embeds files attached to a vector store; the store and the model are the same operator.",
+   "remediation": {
+    "third_party": "The data is already held by OpenAI; record OpenAI as a sub-processor with its DPA."
+   },
+   "sources": ["https://developers.openai.com/api/docs/guides/your-data"]
+  },
+  "redis": {
+   "database": "Redis",
+   "store_side_models": false,
+   "not_supported_reason": "Redis stores and searches vectors it is given; embedding happens in the client (for example RedisVL), so the server sends no text to a model provider.",
+   "features": null,
+   "remediation": {},
+   "sources": []
+  },
+  "chroma": {
+   "database": "Chroma",
+   "store_side_models": "unknown",
+   "features": "Embedding functions normally run in the client library. Whether Chroma Cloud embeds server-side for this deployment is not reported to this connector.",
+   "remediation": {},
+   "sources": []
+  }
+ }
+}

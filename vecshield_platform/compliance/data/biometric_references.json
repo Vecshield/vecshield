@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "verified_on": "2026-09-29",
+  "note": "What may attach to a collection of face or voice templates. Whether a regime reaches a given customer depends on who they are, where the subjects are and how the data was obtained; this list says what to review, not what applies.",
+  "references": [
+    {
+      "id": "eu_ai_act_art_5_1_e",
+      "title": "EU AI Act Art. 5(1)(e): untargeted scraping for facial recognition databases",
+      "jurisdiction": "EU",
+      "citation": "Regulation (EU) 2024/1689, Art. 5(1)(e); application date per Art. 113",
+      "modalities": [
+        "face"
+      ],
+      "summary": "Prohibits placing on the market, putting into service or using AI systems that create or expand facial recognition databases through the untargeted scraping of facial images from the internet or CCTV footage. Chapters I and II apply from 2 February 2025.",
+      "excerpt": "the use of AI systems that create or expand facial recognition databases through the untargeted scraping of facial images from the internet or CCTV footage",
+      "source_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+      "secondary_source_url": "https://artificialintelligenceact.eu/article/5/",
+      "applies_from": "2025-02-02",
+      "obligation": "Review provenance: if the face images behind this collection were gathered by untargeted scraping of the internet or CCTV footage, building or expanding it is prohibited.",
+      "caution": "A face-template collection is not by itself evidence of scraping. Only the source of the images decides this."
+    },
+    {
+      "id": "gdpr_art_9_1",
+      "title": "GDPR Art. 9(1): biometric data for unique identification",
+      "jurisdiction": "EU/EEA",
+      "citation": "Regulation (EU) 2016/679, Art. 9(1)",
+      "modalities": [
+        "face",
+        "voice"
+      ],
+      "summary": "Processing biometric data for the purpose of uniquely identifying a natural person is a special category, prohibited unless an Art. 9(2) condition applies (explicit consent, employment law, and so on).",
+      "excerpt": "biometric data for the purpose of uniquely identifying a natural person",
+      "source_url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj",
+      "secondary_source_url": "https://gdpr-info.eu/art-9-gdpr/",
+      "obligation": "Record the Art. 9(2) condition relied on, and complete a DPIA (Art. 35) before processing."
+    },
+    {
+      "id": "bipa_740_ilcs_14_15",
+      "title": "Illinois BIPA 740 ILCS 14/15",
+      "jurisdiction": "US-IL",
+      "citation": "740 ILCS 14/15(a)-(b)",
+      "modalities": [
+        "face",
+        "voice"
+      ],
+      "summary": "(a) Publish a written retention schedule and destroy biometric identifiers when the purpose is satisfied or within 3 years of the individual's last interaction, whichever occurs first. (b) Before collecting, inform the subject in writing of the collection, its purpose and length of term, and obtain a written release.",
+      "excerpt": "receives a written release executed by the subject of the biometric identifier or biometric information or the subject's legally authorized representative",
+      "source_url": "https://www.ilga.gov/legislation/ilcs/ilcs3.asp?ActID=3004&ChapterID=57",
+      "secondary_source_url": "https://codes.findlaw.com/il/chapter-740-civil-liabilities/il-st-sect-740-14-15/",
+      "obligation": "Hold a written release per subject, publish the retention schedule, and destroy templates no later than 3 years after last interaction (sooner if the purpose is satisfied)."
+    },
+    {
+      "id": "texas_cubi_bus_com_503_001",
+      "title": "Texas CUBI, Bus. & Com. Code 503.001",
+      "jurisdiction": "US-TX",
+      "citation": "Tex. Bus. & Com. Code 503.001(a)-(c)",
+      "modalities": [
+        "face",
+        "voice"
+      ],
+      "summary": "A biometric identifier includes a voiceprint or record of face geometry. It may not be captured for a commercial purpose without informing the individual and receiving consent, and must be destroyed within a reasonable time and no later than the first anniversary of the date the purpose for collecting it expires (with stated exceptions).",
+      "excerpt": "not later than the first anniversary of the date the purpose for collecting the identifier expires",
+      "source_url": "https://statutes.capitol.texas.gov/Docs/BC/htm/BC.503.htm",
+      "secondary_source_url": "https://texas.public.law/statutes/tex._bus._and_com._code_section_503.001",
+      "obligation": "Record consent, and destroy templates within a year of the purpose expiring.",
+      "verification": "Text confirmed on texas.public.law and in search summaries of the official code; the capitol.texas.gov page did not render when fetched."
+    },
+    {
+      "id": "washington_rcw_19_375_020",
+      "title": "Washington RCW 19.375.020",
+      "jurisdiction": "US-WA",
+      "citation": "RCW 19.375.020(1), (4)(b)",
+      "modalities": [
+        "face",
+        "voice"
+      ],
+      "summary": "A biometric identifier may not be enrolled in a database for a commercial purpose without notice and consent or a mechanism to prevent later commercial use, and may be retained no longer than reasonably necessary for the stated purposes.",
+      "excerpt": "A person may not enroll a biometric identifier in a database for a commercial purpose, without first providing notice, obtaining consent, or providing a mechanism to prevent the subsequent use of a biometric identifier for a commercial purpose.",
+      "source_url": "https://app.leg.wa.gov/rcw/default.aspx?cite=19.375.020",
+      "obligation": "Record the notice and consent (or opt-out mechanism) for enrollment, and the retention justification."
+    },
+    {
+      "id": "ccpa_1798_140_ae_2_a",
+      "title": "CCPA sensitive personal information: biometric identification",
+      "jurisdiction": "US-CA",
+      "citation": "Cal. Civ. Code 1798.140(ae)(2)(A)",
+      "modalities": [
+        "face",
+        "voice"
+      ],
+      "summary": "Processing biometric information for the purpose of uniquely identifying a consumer is sensitive personal information, carrying the right to limit its use and disclosure.",
+      "excerpt": "The processing of biometric information for the purpose of uniquely identifying a consumer.",
+      "source_url": "https://cppa.ca.gov/pdf/20260101_ccpa_statute.pdf",
+      "obligation": "Treat the collection as sensitive personal information: disclose it, honour requests to limit, and include it in the risk assessment."
+    },
+    {
+      "id": "ccpa_regs_7150_b_6",
+      "title": "CCPA Regulations 11 CCR 7150(b)(6): risk assessment for identity technology training",
+      "jurisdiction": "US-CA",
+      "citation": "Cal. Code Regs. tit. 11, 7150(b)(2) and (b)(6)",
+      "modalities": [
+        "face",
+        "voice"
+      ],
+      "summary": "A risk assessment is required before processing sensitive personal information, and before processing personal information the business intends to use to train a facial-recognition, emotion-recognition or other technology that verifies a consumer's identity. The regulations took effect 2026-01-01.",
+      "excerpt": "train a facial-recognition, emotion-recognition, or other technology that verifies a consumer's identity, or conducts physical or biological identification or profiling of a consumer",
+      "source_url": "https://cppa.ca.gov/regulations/pdf/ccpa_statute_eff_20260101.pdf",
+      "effective_date": "2026-01-01",
+      "obligation": "Complete and retain a risk assessment covering this collection."
+    },
+    {
+      "id": "colorado_crs_6_1_1314",
+      "title": "Colorado Privacy Act biometric amendment (HB24-1130, C.R.S. 6-1-1314)",
+      "jurisdiction": "US-CO",
+      "citation": "C.R.S. 6-1-1314 (enacted by HB24-1130)",
+      "modalities": [
+        "face",
+        "voice"
+      ],
+      "summary": "Controllers processing biometric identifiers adopt a written policy with a retention schedule and delete a biometric identifier by the earliest of: the initial purpose being satisfied, twenty-four months after the consumer last interacted with the controller, or the earliest reasonably feasible date. Effective 2025-07-01.",
+      "excerpt": "Twenty-four months after the consumer last interacted with the controller",
+      "source_url": "https://leg.colorado.gov/bills/hb24-1130",
+      "secondary_source_url": "https://law.justia.com/codes/colorado/title-6/fair-trade-and-restraint-of-trade/article-1/part-13/section-6-1-1314/",
+      "effective_date": "2025-07-01",
+      "obligation": "Adopt the written retention policy and delete templates no later than 24 months after last interaction.",
+      "verification": "Effective date confirmed on the Colorado General Assembly bill page. The 24-month trigger was confirmed through search summaries of the codified section; the statute page itself was not fetched."
+    }
+  ]
+}

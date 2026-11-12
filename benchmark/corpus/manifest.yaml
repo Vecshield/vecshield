@@ -1,0 +1,58 @@
+# What this corpus is, and — more usefully — what it is not.
+version: 3
+created: 2026-09-18
+revised: 2026-10-03
+licence: "Same as the repository. Redistributable."
+
+provenance: >
+  Every item is written for this benchmark or is a value its vendor publishes
+  as an example. No customer data, no scraped text, nothing observed in a real
+  store. The published examples (AWS documentation keys, card-network test
+  numbers, the SSA example SSN) are included precisely because they are public.
+
+expansion_v2: >
+  The September 18 expansion was written to test whether `aws_access_key`
+  deserves a confidence class, because an irreversible delete waits on one.
+  An expansion written to open a gate is under obvious pressure to produce a
+  flattering number, so two things guard against that and should be checked by
+  anyone reviewing it. The hard negatives were written first and deliberately
+  — strings shaped to trip the detector, taken from what actually surrounds a
+  key in a repository: truncated ids, lowercase, base64 blobs, UUIDs with the
+  prefix, hex hashes, variable references, already-redacted values, and
+  anonymised placeholders. And rephrasings of one case now declare
+  `variant_of` and count as a single observation, so writing forty wordings of
+  the same secret buys one measurement rather than forty. The result is that
+  `aws_access_key` earned 'possible' and not 'likely', which is what the
+  evidence supports.
+
+expansion_v3: >
+  The October 3 expansion grows the injection family from 6 items to about 50.
+  Its hard negatives are not invented: each is a sentence the previous scanner
+  flagged HIGH (runbook imperatives, spec-sheet "System:" lines, emoji joiners,
+  Persian ZWNJ, presigned image URLs), so they record observed failures rather
+  than flattering cases. Its attacks — homoglyphs, soft hyphens, variation
+  selectors, tag smuggling, static exfiltration images — were written
+  alongside the patterns that catch them, so injection recall on this corpus
+  is an upper bound, not an estimate.
+
+limitations:
+  - "English only for the content classifier. The injection family includes
+    Persian, Hebrew and Russian hard negatives, and nothing else is measured in
+    another language."
+  - "Short items. Real chunks are longer and noisier, and recall on long text is unmeasured."
+  - "Written by the people who wrote the detectors, so it encodes their idea of
+    a hard case. An independent corpus would be better evidence."
+  - "Small. Precision and recall from tens of items carry wide intervals, and the
+    harness reports those intervals rather than point estimates."
+  - "Independent cases, not items, are the unit. Thirteen cases still carry a
+    wide interval: aws_access_key measures 0.923 with a lower bound of 0.667.
+    Roughly forty clean cases are needed before a lower bound clears 0.90."
+  - "No adversarial obfuscation for the content classifier: no homoglyphs, no
+    base64-wrapped secrets, no zero-width splitting. A detector can score well
+    here and fail against an attacker who is trying. (The injection family does
+    carry obfuscated payloads; see expansion_v3.)"
+
+not_a_claim: >
+  A result here is evidence about this corpus. It is not a claim about a
+  customer's data, and the harness ships so customers can run it against their
+  own labelled content.

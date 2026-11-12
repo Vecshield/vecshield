@@ -1,0 +1,38 @@
+# Health information, and text about health that identifies nobody.
+items:
+  - id: phi-record
+    text: "Patient Aoife Ni Bhriain, MRN 55-2213, diagnosed E11.9 on 2026-03-02."
+    expect: sensitive
+    labels: [phi]
+    reason: "A named patient with a record number and a diagnosis code."
+    decided_by: seed
+
+  - id: phi-lay-description
+    text: "My mother was diagnosed with type 2 diabetes last spring."
+    expect: sensitive
+    labels: [phi]
+    reason: >
+      Health information about an identifiable relative. Whether it is ePHI
+      is a legal determination, not a detector's — which is why the criterion
+      model asks a human.
+    decided_by: seed
+
+  - id: clean-medical-fiction
+    text: "In the novel, the surgeon misdiagnoses the patient in chapter four."
+    expect: clean
+    reason: "Fiction about medicine identifies no one."
+    decided_by: seed
+
+  - id: clean-policy-health
+    text: "Employees may claim private medical cover after six months."
+    expect: clean
+    reason: "A benefits policy; no individual's health data."
+    decided_by: seed
+
+  - id: clean-icd-in-reference
+    text: "ICD-10 code E11.9 denotes type 2 diabetes without complications."
+    expect: clean
+    reason: >
+      A code in a reference table, attached to nobody. A detector keyed on
+      code shapes alone will flag every clinical glossary.
+    decided_by: seed

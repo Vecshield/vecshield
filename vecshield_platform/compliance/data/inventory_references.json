@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "verified_on": "2026-09-29",
+  "note": "Inventory requirements an exported vector-store inventory can contribute evidence to. The export records what the scan observed; fields listed under declared_fields are the customer's to fill.",
+  "references": [
+    {
+      "id": "nydfs_23_nycrr_500_13_a",
+      "title": "NYDFS Cybersecurity Regulation 23 NYCRR 500.13(a)",
+      "jurisdiction": "US-NY",
+      "citation": "23 NYCRR 500.13(a)",
+      "summary": "Written policies ensuring a complete, accurate and documented asset inventory of information systems, tracking at least owner, location, classification or sensitivity, support expiration date and recovery time objectives, with a stated frequency to update and validate it.",
+      "fields": ["owner", "location", "classification_or_sensitivity", "support_expiration_date", "recovery_time_objective"],
+      "source_url": "https://www.law.cornell.edu/regulations/new-york/23-NYCRR-500.13"
+    },
+    {
+      "id": "ccpa_regs_7123_c_4",
+      "title": "CCPA Regulations 11 CCR 7123(c)(4): inventory in the cybersecurity audit",
+      "jurisdiction": "US-CA",
+      "citation": "Cal. Code Regs. tit. 11, 7123(c)(4)(A)-(B)",
+      "summary": "The cybersecurity audit assesses, if applicable, personal information inventories (maps and flows identifying where personal information is stored and how it can be accessed), classification and tagging of personal information, and hardware and software inventories.",
+      "excerpt": "Personal information inventories (e.g., maps and flows identifying where personal information is stored, and how it can be accessed)",
+      "source_url": "https://cppa.ca.gov/regulations/pdf/ccpa_statute_eff_20260101.pdf"
+    },
+    {
+      "id": "minnesota_325m_16_subd_2_c",
+      "title": "Minnesota Consumer Data Privacy Act 325M.16 subd. 2(c)",
+      "jurisdiction": "US-MN",
+      "citation": "Minn. Stat. 325M.16, subd. 2(c)",
+      "summary": "Reasonable data security practices include maintaining an inventory of the data that must be managed to exercise these responsibilities. Chapter 325M is effective 2025-07-31.",
+      "excerpt": "including the maintenance of an inventory of the data that must be managed to exercise these responsibilities",
+      "source_url": "https://www.revisor.mn.gov/statutes/cite/325M.16",
+      "effective_date": "2025-07-31"
+    }
+  ]
+}

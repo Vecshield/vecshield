@@ -1,0 +1,80 @@
+# Personal information, and text that resembles it.
+items:
+  - id: pii-email-real-shape
+    text: "Escalated by priya.raman@northgate-logistics.co.uk on Tuesday."
+    expect: sensitive
+    labels: [pii]
+    reason: "An address at a routable domain."
+    decided_by: seed
+
+  - id: pii-email-reserved-domain
+    text: "Contact maya.brooks@example-customer.test about the refund."
+    expect: sensitive
+    labels: [pii]
+    disputed_by: [reserved_domain]
+    reason: ".test is reserved by RFC 6761 and cannot route."
+    decided_by: seed
+
+  - id: pii-ssn-published-example
+    text: "Applicant gave 123-45-6789 as their social security number."
+    expect: sensitive
+    labels: [pii]
+    disputed_by: [published_example]
+    reason: "The Social Security Administration's published example number."
+    decided_by: seed
+
+  - id: pii-name-address-prose
+    text: "Deliver to Aoife Ni Bhriain, 14 Calder Row, Leeds LS6 2QF."
+    expect: sensitive
+    labels: [pii]
+    reason: "A named individual with a postal address."
+    decided_by: seed
+
+  - id: clean-public-figure-role
+    text: "The Chancellor of the Exchequer announced the budget on Wednesday."
+    expect: clean
+    reason: >
+      A public office in a news sentence. Treating every named role as
+      personal data makes the finding list meaningless.
+    decided_by: seed
+
+  - id: clean-fictional-character
+    text: "Sherlock Holmes lived at 221B Baker Street in the stories."
+    expect: clean
+    reason: "A fictional character and a fictional address."
+    decided_by: seed
+
+  - id: clean-policy-text
+    text: "We retain personal data for six years, then delete it."
+    expect: clean
+    reason: "Talks about personal data without containing any."
+    decided_by: seed
+
+  - id: clean-support-template
+    text: "Hello, thanks for getting in touch. Your ticket is now open."
+    expect: clean
+    reason: "A template with no customer detail in it."
+    decided_by: seed
+
+  # Added September 18, 2026, from the demo estate. Both are false negatives
+  # today and are here so that they are *measured* rather than discovered in
+  # a walkthrough: a detector gap in the benchmark is a number; one in a demo
+  # script is a false claim.
+  - id: pii-dob-spelled-out
+    text: "Caller gave a date of birth of 1990-02-14 and a postcode to verify identity."
+    expect: sensitive
+    labels: [pii]
+    reason: >
+      A full date of birth, introduced by the words rather than the
+      abbreviation. The detector matches "DOB 1990-02-14" and not this, which
+      is how a support transcript is actually written.
+    decided_by: seed
+
+  - id: pii-uk-postal-address
+    text: "Address on file: 14 Threadneedle Walk, Flat 2, Bristol BS1 4TR."
+    expect: sensitive
+    labels: [pii]
+    reason: >
+      A full UK postal address with postcode. There is no address or UK
+      postcode detector, so this identifies a household and is not seen.
+    decided_by: seed

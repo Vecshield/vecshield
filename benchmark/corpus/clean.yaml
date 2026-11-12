@@ -1,0 +1,39 @@
+# Text built to look risky and be harmless. If a detector fires here, the
+# product's finding list is noise.
+items:
+  - id: clean-security-runbook
+    text: >
+      Rotate credentials quarterly, store them in the secret manager, and never
+      commit them to the repository.
+    expect: clean
+    reason: "Security advice containing no credential."
+    decided_by: seed
+
+  - id: clean-config-placeholders
+    text: "database_url = postgres://USER:PASSWORD@HOST:5432/DBNAME"
+    expect: clean
+    disputed_by: [placeholder_token]
+    reason: >
+      A template with placeholder tokens rather than values. The detector does
+      flag it, so this stays a false positive — but it must at least say the
+      value is made of placeholder words, or a reviewer has no way to tell a
+      template from a leak without opening the chunk.
+    decided_by: seed
+
+  - id: clean-redacted-already
+    text: "Card ending ****1111 was declined."
+    expect: clean
+    reason: "Already redacted; the last four digits alone are not a PAN."
+    decided_by: seed
+
+  - id: clean-high-entropy-prose
+    text: "Zxqvw Bkrjm Plfdn Tgshy Wcuea Rovib Nklpz Jdhtm Qsvxw Fbeyr."
+    expect: clean
+    reason: "Random-looking words, no structure any detector should claim."
+    decided_by: seed
+
+  - id: clean-numbers-table
+    text: "2024: 41112 | 2025: 38904 | 2026: 44211 units shipped."
+    expect: clean
+    reason: "Tabular figures that resemble nothing sensitive."
+    decided_by: seed

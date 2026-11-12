@@ -1,0 +1,70 @@
+VecShield
+Copyright 2026 VecShield contributors
+
+This product includes software developed by the VecShield contributors.
+
+VecShield is licensed under the Apache License, Version 2.0. A copy of the
+license is in the LICENSE file at the root of this repository.
+
+The distribution ships two Python packages, both under Apache-2.0:
+
+  vecshield/           the detection library (classifiers, ingest gate,
+                       dataset scanning) and the `vecshield` CLI
+  vecshield_platform/  the server, web console, vector-store connectors,
+                       assessment engines and the `vecshield-platform` CLI
+
+---
+
+Bundled third-party assets
+--------------------------
+
+The web console self-hosts two typefaces under the SIL Open Font License 1.1.
+Their license texts ship alongside the font files in
+vecshield_platform/api/dashboard/dist/assets/fonts/.
+
+Inter
+  Copyright (c) 2016-2024 The Inter Project Authors.
+  Licensed under the SIL Open Font License, Version 1.1.
+  https://github.com/rsms/inter
+
+JetBrains Mono
+  Copyright (c) 2020 The JetBrains Mono Project Authors.
+  Licensed under the SIL Open Font License, Version 1.1.
+  https://github.com/JetBrains/JetBrainsMono
+
+---
+
+Optional third-party dependencies
+---------------------------------
+
+The following are installed separately through extras and are NOT bundled
+with VecShield. Their notices are reproduced here for convenience.
+
+presidio-analyzer  (extra: nlp)
+  Copyright (c) Presidio Contributors.
+  Licensed under the MIT License.
+  https://github.com/microsoft/presidio
+
+spaCy  (extra: nlp)
+  Copyright (C) 2016-2024 ExplosionAI GmbH, 2016 spaCy GmbH,
+  2015 Matthew Honnibal
+  Licensed under the MIT License.
+  https://github.com/explosion/spaCy
+
+Vector-store client libraries (extras: chroma, pgvector, qdrant, weaviate,
+milvus, pinecone, redis, opensearch, mongodb, openai, azure, bedrock, vertex)
+are installed on demand and retain their own licenses.
+
+---
+
+Benchmark data
+--------------
+
+benchmark/corpus/ contains synthetic samples written for this project, plus
+test values published by their issuers for exactly this purpose (payment-card
+test numbers published by the card networks, and the example SSN published by
+the US Social Security Administration). It contains no real personal data.
+
+benchmarks/ contains harnesses that evaluate the detectors against public
+research datasets. The datasets themselves are not redistributed here; each
+harness downloads them and each retains its own license and terms.

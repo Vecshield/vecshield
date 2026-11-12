@@ -1,0 +1,223 @@
+{{- if and (not .Values.auth.token) (not .Values.auth.existingSecret) }}
+{{- fail "auth.token or auth.existingSecret is required: the API binds 0.0.0.0 and must be authenticated. Set --set auth.token=... (or provide auth.existingSecret referencing a Secret with key CUSTOMER_API_TOKEN)." }}
+{{- end }}
+{{- if and .Values.auth.localLogin (not .Values.auth.initialAdminPasswordSecret) }}
+{{- fail "auth.initialAdminPasswordSecret is required while auth.localLogin is true: without it the first start creates admin/admin on a pod reachable in-cluster (plan §0.3). Create a Secret with key VECSHIELD_INITIAL_ADMIN_PASSWORD (or set auth.initialAdminPasswordKey) and name it here, or set auth.localLogin=false to use bearer tokens only." }}
+{{- end }}
+{{- if ne (int .Values.replicaCount) 1 }}
+{{- fail "replicaCount must be 1: the VecShield server is the single writer of its audit log and state volume (a second replica refuses to start)." }}
+{{- end }}
+{{- if not (has (.Values.nlp.mode | default "auto") (list "auto" "required" "disabled")) }}
+{{- fail "nlp.mode must be auto, required or disabled." }}
+{{- end }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  # Stop the old pod (releasing the audit-log lock) before starting the new
+  # one; a rolling update would wait forever on a pod that cannot start.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      # The server never calls the Kubernetes API; no token is mounted, so a
+      # compromised pod has no cluster credential to steal.
+      automountServiceAccountToken: false
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: vecshield-platform
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          args:
+            - serve
+            - --config
+            - {{ .Values.config.path }}
+            - --state-dir
+            - {{ .Values.config.stateDir }}
+            - --host
+            - "0.0.0.0"
+            - --port
+            - "{{ .Values.service.port }}"
+          env:
+            - name: CUSTOMER_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "vecshield.authSecret" . }}
+                  key: CUSTOMER_API_TOKEN
+            {{- if or .Values.auth.adminToken .Values.auth.existingSecret }}
+            # With an admin token set, CUSTOMER_API_TOKEN is read-only.
+            - name: VECSHIELD_ADMIN_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "vecshield.authSecret" . }}
+                  key: VECSHIELD_ADMIN_TOKEN
+                  optional: {{ not .Values.auth.adminToken }}
+            {{- end }}
+            {{- if .Values.auth.localLogin }}
+            - name: VECSHIELD_INITIAL_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.auth.initialAdminPasswordSecret }}
+                  key: {{ .Values.auth.initialAdminPasswordKey }}
+            {{- else }}
+            - name: VECSHIELD_LOGIN
+              value: "off"
+            {{- end }}
+            {{- if .Values.hardening.maxBodyBytes }}
+            - name: VECSHIELD_MAX_BODY_BYTES
+              value: {{ .Values.hardening.maxBodyBytes | int64 | quote }}
+            {{- end }}
+            {{- if .Values.hardening.rateLimit }}
+            - name: VECSHIELD_RATE_LIMIT
+              value: {{ .Values.hardening.rateLimit | int64 | quote }}
+            {{- end }}
+            {{- if .Values.hardening.hsts }}
+            - name: VECSHIELD_HSTS
+              value: "1"
+            {{- end }}
+            {{- if .Values.metrics.public }}
+            - name: VECSHIELD_METRICS_PUBLIC
+              value: "1"
+            {{- end }}
+            {{- include "vecshield.commonEnv" . | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+          # A cold start loads the NLP model before serving (~40 s measured);
+          # liveness and readiness wait until the startup probe has passed.
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
+            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
+          volumeMounts:
+            {{- include "vecshield.volumeMounts" . | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        {{- include "vecshield.volumes" . | nindent 8 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    app: {{ .Release.Name }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.port }}
+{{- if not .Values.auth.existingSecret }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-auth
+type: Opaque
+stringData:
+  CUSTOMER_API_TOKEN: {{ .Values.auth.token | quote }}
+  {{- with .Values.auth.adminToken }}
+  VECSHIELD_ADMIN_TOKEN: {{ . | quote }}
+  {{- end }}
+{{- end }}
+{{- if .Values.persistence.enabled }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-data
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size }}
+  {{- with .Values.persistence.storageClass }}
+  storageClassName: {{ . }}
+  {{- end }}
+{{- end }}
+{{- if .Values.schedule.enabled }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-audit
+spec:
+  schedule: {{ .Values.schedule.cron | quote }}
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            job-name-prefix: {{ .Release.Name }}-audit
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          securityContext:
+            {{- toYaml .Values.podSecurityContext | nindent 12 }}
+          containers:
+            - name: audit
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+              args: ["schedule", "--config", "{{ .Values.config.path }}", "--state-dir", "{{ .Values.config.stateDir }}", "--once"]
+              securityContext:
+                {{- toYaml .Values.securityContext | nindent 16 }}
+              env:
+                {{- include "vecshield.commonEnv" . | nindent 16 }}
+              volumeMounts:
+                {{- include "vecshield.volumeMounts" . | nindent 16 }}
+              resources:
+                {{- toYaml .Values.resources | nindent 16 }}
+          volumes:
+            {{- include "vecshield.volumes" . | nindent 12 }}
+          {{- with .Values.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+{{- end }}

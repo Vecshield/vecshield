@@ -1,0 +1,172 @@
+# VecShield Enterprise Helm values (example scaffold — adapt for production).
+
+# The image carries its NER model: it is installed at `docker build` time
+# (build arg VECSHIELD_NLP_MODELS, default en_core_web_hftrf) and never
+# downloaded at runtime. See docs/nlp_models.md. Measured memory use with the
+# transformer model is 2.2-3.2 GB; `resources` below is sized for it.
+image:
+  repository: your-registry.example/vecshield-platform
+  tag: "0.0.1"
+  pullPolicy: IfNotPresent
+
+# Single writer: the server holds an exclusive lock on its audit log (and is
+# the only writer of its config and SQLite state), so a second pod on the same
+# volume refuses to start. Keep this at 1; the Deployment uses the Recreate
+# strategy so an upgrade stops the old pod before starting the new one. Chart
+# rendering fails for any other value.
+replicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 8088
+
+# Authentication. The API binds 0.0.0.0 in-cluster, so it is mandatory.
+auth:
+  # Bearer token (env CUSTOMER_API_TOKEN). When an admin token is also set
+  # this token is READ-ONLY (viewer); without one it is an admin token.
+  # Rendering fails if neither auth.token nor auth.existingSecret is given.
+  token: ""
+  # Separate admin token (env VECSHIELD_ADMIN_TOKEN) for store/policy writes
+  # and erasure. Strongly recommended: hand scrapers and read-only automation
+  # the read token, and keep this one for administration.
+  adminToken: ""
+  # Name of an existing Secret instead of the two values above. It must hold
+  # key CUSTOMER_API_TOKEN and may hold VECSHIELD_ADMIN_TOKEN.
+  existingSecret: ""
+
+  # Local accounts and console sign-in (ADR 0002). With local login on, the
+  # first start creates `admin` with the password below, which must be
+  # changed at first sign-in. Plan §0.3: the chart never lets that password
+  # default to admin/admin, so rendering fails while localLogin is true and
+  # no initial password Secret is named. Set localLogin: false to turn console
+  # sign-in off (VECSHIELD_LOGIN=off) and rely on bearer tokens only.
+  localLogin: true
+  # Name of an existing Secret holding the initial admin password.
+  initialAdminPasswordSecret: ""
+  # Key inside that Secret.
+  initialAdminPasswordKey: VECSHIELD_INITIAL_ADMIN_PASSWORD
+
+config:
+  # Mount path for the persistent config store.
+  path: /data/vecshield.json
+  # Mount path for SQLite DBs, WAL/SHM sidecars, and audit logs.
+  stateDir: /data/state
+
+persistence:
+  enabled: true
+  size: 2Gi
+  storageClass: ""
+
+# NLP detection (plan §3.3). mode: auto | required | disabled. `required`
+# fails the start loudly when the model cannot load instead of silently
+# degrading to regex-only detection. model: an installed spaCy package name;
+# empty keeps the image's default.
+nlp:
+  mode: required
+  model: ""
+
+# Store connection secrets (ADR 0003). A store's `*_env` reference must name a
+# variable under an allowed prefix and a `*_file` reference must resolve under
+# an allowed root; the server's own credentials are never resolvable.
+storeSecrets:
+  # Existing Secret mounted read-only at /run/secrets/vecshield (the default
+  # file root): reference its keys as e.g.
+  # {"password_file": "/run/secrets/vecshield/pg-password"}.
+  secretName: ""
+  # Extra allowed env prefixes (comma separated). Default VECSHIELD_STORE_.
+  envPrefixes: ""
+  # Exact legacy variable names to allow (comma separated), e.g. PG_PASSWORD.
+  envAllow: ""
+  # Refuse plaintext secrets in store configs (VECSHIELD_REJECT_PLAINTEXT_SECRETS).
+  rejectPlaintext: true
+  # Variables to inject for `*_env` references, e.g.
+  # - name: VECSHIELD_STORE_PG_PASSWORD
+  #   valueFrom: {secretKeyRef: {name: pg, key: password}}
+  env: []
+
+# Outbound alert webhooks (F2): https only; internal addresses need an allow.
+alerting:
+  # Comma-separated hosts (exact or .suffix) or CIDRs that may resolve to
+  # non-public addresses (VECSHIELD_WEBHOOK_HOST_ALLOW).
+  webhookHostAllow: ""
+
+# API hardening (F8).
+hardening:
+  # Reject request bodies above this many bytes (counted, not only declared).
+  maxBodyBytes: 33554432
+  # Per-caller requests per minute; 0 disables (in-process, per pod).
+  rateLimit: 0
+  # Send HSTS on every response. Enable when TLS terminates in front of the
+  # pod (ingress/mesh); over direct https it is sent regardless.
+  hsts: false
+
+metrics:
+  # /metrics requires a bearer token (give the scraper the read token). Set
+  # true only when the port is reachable solely by a trusted scraper.
+  public: false
+
+# Kubernetes probes. The startup budget covers a cold NLP model load
+# (measured ~40 s): periodSeconds x failureThreshold = 180 s.
+probes:
+  startup:
+    periodSeconds: 5
+    failureThreshold: 36
+  liveness:
+    periodSeconds: 20
+    failureThreshold: 3
+  readiness:
+    periodSeconds: 10
+    failureThreshold: 3
+
+resources:
+  requests:
+    cpu: "2"
+    memory: 3Gi
+  limits:
+    memory: 4Gi
+
+# Pod hardening (plan §2.4 item 4). The image runs as UID 10001.
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  fsGroup: 10001
+  seccompProfile:
+    type: RuntimeDefault
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop: ["ALL"]
+# Size cap for the writable /tmp emptyDir (read-only root filesystem).
+tmpSizeLimit: 1Gi
+
+# Optional default-deny NetworkPolicy. Egress is allowed only to DNS and the
+# destinations listed here (stores and webhooks); ingress only from the
+# listed peers on the service port.
+networkPolicy:
+  enabled: false
+  # Peers allowed to reach the API (NetworkPolicy `from` entries). Empty =
+  # no ingress except from pods in the same namespace with the label below.
+  ingressFrom: []
+  # - namespaceSelector: {matchLabels: {kubernetes.io/metadata.name: ingress-nginx}}
+  # Allow DNS lookups to kube-dns.
+  allowDNS: true
+  # Egress rules (NetworkPolicy `egress` entries), e.g.
+  # - to: [{ipBlock: {cidr: 10.20.0.0/16}}]
+  #   ports: [{protocol: TCP, port: 6333}]
+  egress: []
+
+# Scheduled audits as a CronJob running `schedule --once`.
+# Note: the CronJob mounts the same ReadWriteOnce volume; on a multi-node
+# cluster it must be scheduled on the server's node (use affinity).
+schedule:
+  enabled: true
+  cron: "0 2 * * *"    # daily at 02:00
+
+# Extra environment variables for the server and CronJob containers.
+extraEnv: []
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

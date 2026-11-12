@@ -1,0 +1,23 @@
+VecShield Enterprise is starting as {{ .Release.Name }} on port {{ .Values.service.port }}.
+{{- if and (not .Values.auth.adminToken) (not .Values.auth.existingSecret) }}
+
+WARNING: only auth.token is set, so that single bearer token is an ADMIN
+token (store credentials, erasure). Set auth.adminToken (or add
+VECSHIELD_ADMIN_TOKEN to auth.existingSecret) so the everyday token is
+read-only.
+{{- end }}
+{{- if .Values.auth.localLogin }}
+
+Console sign-in is on. The first start creates `admin` with the password in
+Secret {{ .Values.auth.initialAdminPasswordSecret }}; it must be changed at the
+first sign-in.
+{{- end }}
+{{- if not .Values.metrics.public }}
+
+/metrics requires a bearer token: configure the scraper with the read token.
+{{- end }}
+{{- if not .Values.networkPolicy.enabled }}
+
+No NetworkPolicy is installed. Set networkPolicy.enabled=true and list the
+store and webhook destinations under networkPolicy.egress for default-deny.
+{{- end }}

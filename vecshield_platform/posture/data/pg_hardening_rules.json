@@ -1,0 +1,210 @@
+{
+  "_about": "PostgreSQL server-hardening and access rules VecShield evaluates for pgvector stores. Each rule names the condition it fires on (threshold), the severity, and the documentation it rests on; the quote is copied verbatim from source_url. The conditions themselves are code: posture/pg_hardening.py (server_hardening) and access/grants.py (access_grants) and access/isolation.py (tenant_isolation). A rule whose inputs the auditing role may not read is reported not observable, never as passed or failed.",
+  "reviewed_at": "2026-10-05",
+  "server_hardening": [
+    {
+      "id": "hba_trust_remote",
+      "severity": "critical",
+      "title": "pg_hba.conf admits non-local clients without authentication (trust)",
+      "threshold": "a host, hostssl, hostnossl or hostgssenc rule that is not loopback-only has auth_method trust",
+      "inputs": ["pg_hba_file_rules"],
+      "source_url": "https://www.postgresql.org/docs/current/auth-trust.html#AUTH-TRUST",
+      "quote": "trust authentication is only suitable for TCP/IP connections if you trust every user on every machine that is allowed to connect to the server by the pg_hba.conf lines that specify trust.",
+      "remediation": "Change the METHOD of every non-local pg_hba.conf line from trust to scram-sha-256, then SELECT pg_reload_conf()."
+    },
+    {
+      "id": "ssl_off_remote_listener",
+      "severity": "high",
+      "title": "TLS is off while the server listens on non-loopback addresses",
+      "threshold": "ssl = off and listen_addresses names anything other than localhost or loopback addresses",
+      "inputs": ["ssl", "listen_addresses"],
+      "source_url": "https://www.postgresql.org/docs/current/runtime-config-connection.html#GUC-SSL",
+      "quote": "Enables SSL connections. This parameter can only be set in the postgresql.conf file or on the server command line. The default is off.",
+      "remediation": "Set ssl = on with a server certificate and key in postgresql.conf, and use hostssl lines in pg_hba.conf for every remote client."
+    },
+    {
+      "id": "password_encryption_md5",
+      "severity": "medium",
+      "title": "New passwords are stored as MD5 hashes",
+      "threshold": "password_encryption = md5",
+      "inputs": ["password_encryption"],
+      "source_url": "https://www.postgresql.org/docs/current/runtime-config-connection.html#GUC-PASSWORD-ENCRYPTION",
+      "quote": "Support for MD5-encrypted passwords is deprecated and will be removed in a future release of PostgreSQL.",
+      "remediation": "Set password_encryption = scram-sha-256, then reset each role's password so it is re-hashed (ALTER ROLE <role> PASSWORD ...)."
+    },
+    {
+      "id": "hba_md5_remote",
+      "severity": "medium",
+      "title": "pg_hba.conf authenticates non-local clients with md5",
+      "threshold": "a non-loopback host rule has auth_method md5",
+      "inputs": ["pg_hba_file_rules"],
+      "source_url": "https://www.postgresql.org/docs/current/auth-password.html#AUTH-PASSWORD",
+      "quote": "The method md5 uses a custom less secure challenge-response mechanism.",
+      "remediation": "Re-hash passwords with password_encryption = scram-sha-256, then change those pg_hba.conf lines to scram-sha-256."
+    },
+    {
+      "id": "hba_password_remote",
+      "severity": "medium",
+      "title": "pg_hba.conf accepts clear-text passwords from non-local clients",
+      "threshold": "a non-loopback host rule has auth_method password",
+      "inputs": ["pg_hba_file_rules"],
+      "source_url": "https://www.postgresql.org/docs/current/auth-password.html#AUTH-PASSWORD",
+      "quote": "The method password sends the password in clear-text and is therefore vulnerable to password “sniffing” attacks.",
+      "remediation": "Change those pg_hba.conf lines to scram-sha-256."
+    },
+    {
+      "id": "log_statement_records_data",
+      "severity": "medium",
+      "title": "Statement logging writes chunk text and embeddings to the server log",
+      "threshold": "log_statement = mod or all",
+      "inputs": ["log_statement", "log_parameter_max_length"],
+      "source_url": "https://www.postgresql.org/docs/current/runtime-config-logging.html#GUC-LOG-STATEMENT",
+      "quote": "Logged statements might reveal sensitive data and even contain plaintext passwords.",
+      "remediation": "Set log_statement = ddl (or none) and log_parameter_max_length = 0; record data access with pgaudit object logging, which can omit parameters, instead."
+    },
+    {
+      "id": "pgaudit_logs_parameters",
+      "severity": "medium",
+      "title": "pgaudit writes statement parameters (chunk text, embeddings) to the audit log",
+      "threshold": "pgaudit is loaded, pgaudit.log_parameter = on, and pgaudit.log records read, write or all",
+      "inputs": ["shared_preload_libraries", "pgaudit.log", "pgaudit.log_parameter"],
+      "source_url": "https://github.com/pgaudit/pgaudit#pgauditlog_parameter",
+      "quote": "Specifies that audit logging should include the parameters that were passed with the statement. When parameters are present they will be included in `CSV` format after the statement text.",
+      "remediation": "Set pgaudit.log_parameter = off, or restrict the audit log's readers as you restrict the vector tables."
+    },
+    {
+      "id": "pg_stat_statements_readers",
+      "severity": "medium",
+      "title": "Non-superuser login roles can read every role's statement text",
+      "threshold": "pg_stat_statements is installed and a login role that is not a superuser has the privileges of pg_read_all_stats (the auditing role itself is excluded)",
+      "inputs": ["pg_extension", "pg_roles"],
+      "source_url": "https://www.postgresql.org/docs/current/pgstatstatements.html#PGSTATSTATEMENTS-COLUMNS",
+      "quote": "For security reasons, only superusers and roles with privileges of the pg_read_all_stats role are allowed to see the SQL text and queryid of queries executed by other users.",
+      "remediation": "REVOKE pg_read_all_stats (and pg_monitor) from roles that do not monitor the server; pg_stat_statements normalises most constants, but the text still shows table and filter structure."
+    },
+    {
+      "id": "ssl_min_protocol_below_tls12",
+      "severity": "low",
+      "title": "The server accepts TLS versions below 1.2",
+      "threshold": "ssl = on and ssl_min_protocol_version is TLSv1 or TLSv1.1",
+      "inputs": ["ssl", "ssl_min_protocol_version"],
+      "source_url": "https://www.postgresql.org/docs/current/runtime-config-connection.html#GUC-SSL-MIN-PROTOCOL-VERSION",
+      "quote": "The default is TLSv1.2, which satisfies industry best practices as of this writing.",
+      "remediation": "Set ssl_min_protocol_version = 'TLSv1.2' (or TLSv1.3) in postgresql.conf and reload."
+    },
+    {
+      "id": "no_pgaudit",
+      "severity": "low",
+      "title": "No audit logging extension records who read the vector tables",
+      "threshold": "shared_preload_libraries is readable and does not load pgaudit",
+      "inputs": ["shared_preload_libraries"],
+      "source_url": "https://github.com/pgaudit/pgaudit#introduction",
+      "quote": "The PostgreSQL Audit Extension (pgAudit) provides detailed session and/or object audit logging via the standard PostgreSQL logging facility.",
+      "remediation": "Add pgaudit to shared_preload_libraries, restart, CREATE EXTENSION pgaudit, and enable object logging for the vector tables (pgaudit.role)."
+    }
+  ],
+  "access_grants": [
+    {
+      "id": "retrieval_superuser",
+      "severity": "critical",
+      "title": "The retrieval role is a superuser, or can become one",
+      "threshold": "the retrieval role has rolsuper, or is a member of a role that has it",
+      "inputs": ["pg_roles", "pg_auth_members"],
+      "source_url": "https://www.postgresql.org/docs/current/ddl-rowsecurity.html#DDL-ROWSECURITY",
+      "quote": "Superusers and roles with the BYPASSRLS attribute always bypass the row security system when accessing a table.",
+      "remediation": "Create a dedicated login role for retrieval with SELECT on the vector tables only, and connect the application as that role."
+    },
+    {
+      "id": "retrieval_bypassrls",
+      "severity": "critical",
+      "title": "The retrieval role bypasses row-level security on a vector table that relies on it",
+      "threshold": "a vector table has row security enabled and the retrieval role has rolbypassrls, or is a member of a role that has it",
+      "inputs": ["pg_roles", "pg_auth_members", "pg_class"],
+      "source_url": "https://www.postgresql.org/docs/current/ddl-rowsecurity.html#DDL-ROWSECURITY",
+      "quote": "Superusers and roles with the BYPASSRLS attribute always bypass the row security system when accessing a table.",
+      "remediation": "ALTER ROLE <retrieval role> NOBYPASSRLS, and revoke membership in any role that has BYPASSRLS."
+    },
+    {
+      "id": "retrieval_owner_without_force",
+      "severity": "high",
+      "title": "The retrieval role owns a vector table whose row security does not apply to its owner",
+      "threshold": "a vector table has row security enabled, FORCE ROW LEVEL SECURITY off, and is owned by the retrieval role",
+      "inputs": ["pg_class"],
+      "source_url": "https://www.postgresql.org/docs/current/ddl-rowsecurity.html#DDL-ROWSECURITY",
+      "quote": "Table owners normally bypass row security as well, though a table owner can choose to be subject to row security with ALTER TABLE ... FORCE ROW LEVEL SECURITY.",
+      "remediation": "ALTER TABLE <table> FORCE ROW LEVEL SECURITY, or better, retrieve as a role that does not own the table."
+    },
+    {
+      "id": "retrieval_can_write",
+      "severity": "high",
+      "title": "The retrieval role can change the vector tables it reads",
+      "threshold": "the retrieval role holds INSERT, UPDATE, DELETE or TRUNCATE on a vector table",
+      "inputs": ["has_table_privilege"],
+      "source_url": "https://www.postgresql.org/docs/current/ddl-priv.html",
+      "quote": "Allows INSERT of a new row into a table, view, etc.",
+      "remediation": "REVOKE INSERT, UPDATE, DELETE, TRUNCATE ON <table> FROM <retrieval role>; give ingestion its own role."
+    },
+    {
+      "id": "retrieval_createrole",
+      "severity": "high",
+      "title": "The retrieval role can create and administer roles",
+      "threshold": "the retrieval role has rolcreaterole",
+      "inputs": ["pg_roles"],
+      "source_url": "https://www.postgresql.org/docs/current/role-attributes.html",
+      "quote": "A role with CREATEROLE privilege can alter and drop roles which have been granted to the CREATEROLE user with the ADMIN option.",
+      "remediation": "ALTER ROLE <retrieval role> NOCREATEROLE; administer roles from a separate account."
+    },
+    {
+      "id": "public_select_without_rls",
+      "severity": "high",
+      "title": "Every role can read a vector table that has no row security",
+      "threshold": "PUBLIC holds SELECT on a vector table with row security disabled",
+      "inputs": ["has_table_privilege", "pg_class"],
+      "source_url": "https://www.postgresql.org/docs/current/ddl-priv.html",
+      "quote": "The special “role” name PUBLIC can be used to grant a privilege to every role on the system.",
+      "remediation": "REVOKE SELECT ON <table> FROM PUBLIC, and GRANT SELECT to the roles that retrieve."
+    },
+    {
+      "id": "public_create_on_schema",
+      "severity": "medium",
+      "title": "Any role can create objects in a schema the vector extension or the search path uses",
+      "threshold": "PUBLIC holds CREATE on the vector extension's schema or a schema in the session's search_path",
+      "inputs": ["has_schema_privilege", "pg_extension"],
+      "source_url": "https://www.postgresql.org/docs/current/ddl-schemas.html#DDL-SCHEMAS-PATTERNS",
+      "quote": "To implement this pattern, first ensure that no schemas have public CREATE privileges.",
+      "remediation": "REVOKE CREATE ON SCHEMA <schema> FROM PUBLIC (PostgreSQL 15 and later already do this for public in new databases)."
+    },
+    {
+      "id": "privileged_auditor",
+      "severity": "low",
+      "title": "VecShield audited as a role that bypasses row security",
+      "threshold": "the connecting role has rolsuper or rolbypassrls",
+      "inputs": ["pg_roles"],
+      "source_url": "https://www.postgresql.org/docs/current/ddl-rowsecurity.html#DDL-ROWSECURITY",
+      "quote": "Superusers and roles with the BYPASSRLS attribute always bypass the row security system when accessing a table.",
+      "remediation": "Audit as a least-privileged role (docs/pgvector.md); isolation results then show what an application role sees."
+    },
+    {
+      "id": "rls_ann_without_iterative_scan",
+      "severity": "low",
+      "title": "Row security on an approximate index can make searches come back short",
+      "threshold": "a vector table has row security enabled, its vector column has an HNSW or IVFFlat index, and the effective <index>.iterative_scan for the retrieval role is off",
+      "inputs": ["pg_class", "pg_index", "pg_db_role_setting", "current_setting"],
+      "source_url": "https://github.com/pgvector/pgvector#iterative-index-scans",
+      "quote": "With approximate indexes, queries with filtering can return less results since filtering is applied after the index is scanned.",
+      "remediation": "ALTER ROLE <retrieval role> SET hnsw.iterative_scan = strict_order (IVFFlat: ivfflat.iterative_scan = relaxed_order); pgvector 0.8.0 or later. Never fix short results by retrieving as a role that bypasses row security."
+    }
+  ],
+  "tenant_isolation": [
+    {
+      "id": "ann_filter_without_iterative_scan",
+      "severity": "low",
+      "title": "Filtered searches on an approximate index can come back short",
+      "threshold": "a collection shared by two or more tenants is searched through an HNSW or IVFFlat index whose effective <index>.iterative_scan is off",
+      "inputs": ["pg_index", "pg_db_role_setting", "current_setting"],
+      "source_url": "https://github.com/pgvector/pgvector#iterative-index-scans",
+      "quote": "With approximate indexes, queries with filtering can return less results since filtering is applied after the index is scanned.",
+      "remediation": "ALTER ROLE <app role> SET hnsw.iterative_scan = strict_order (IVFFlat: ivfflat.iterative_scan = relaxed_order); pgvector 0.8.0 or later."
+    }
+  ]
+}

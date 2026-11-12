@@ -1,0 +1,61 @@
+{
+ "_about": "Adequacy findings that let personal data leave the EU/EEA (GDPR Art. 45) or the UK (UK GDPR Art. 45, 'data bridges') without further safeguards. Statuses: 'adequate' (whole country); 'partial' (only the named sector or organisations); 'conditional_dpf' (only organisations certified under the Data Privacy Framework, which VecShield cannot verify). Anything not listed has no adequacy finding here: a transfer needs an Art. 46 mechanism (SCCs, UK IDTA or Addendum, BCRs) or an Art. 49 derogation. This file records the legal basis; it is not legal advice and it does not establish that any transfer is lawful.",
+ "_as_of": "2026-09-29",
+ "_sources": {
+  "GDPR": "https://commission.europa.eu/law/law-topic/data-protection/international-dimension-data-protection/adequacy-decisions_en",
+  "UK_GDPR": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/international-transfers/adequacy-regulations/is-the-restricted-transfer-covered-by-adequacy-regulations/",
+  "UK_GDPR_mechanisms": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/international-transfers/international-transfers-a-guide/"
+ },
+ "regimes": {
+  "GDPR": {
+   "exporter_area": "EEA",
+   "transfer_mechanism": "Art. 46 GDPR safeguards: the European Commission's standard contractual clauses (SCCs), binding corporate rules, or another Art. 46 instrument; or an Art. 49 derogation",
+   "destinations": {
+    "AD": {"status": "adequate", "reference": "Commission Decision 2010/625/EU", "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32010D0625"},
+    "AR": {"status": "adequate", "reference": "Commission Decision 2003/490/EC", "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32003D0490"},
+    "BR": {"status": "adequate", "reference": "Commission adequacy decision for Brazil (adopted 26 January 2026)", "url": "https://commission.europa.eu/law/law-topic/data-protection/international-dimension-data-protection/adequacy-decisions_en"},
+    "CA": {"status": "partial", "scope": "Commercial organisations only (subject to PIPEDA)", "reference": "Commission Decision 2002/2/EC", "url": "https://eur-lex.europa.eu/legal-content/en/TXT/?uri=CELEX%3A32002D0002"},
+    "FO": {"status": "adequate", "reference": "Commission Decision 2010/146/EU", "url": "https://eur-lex.europa.eu/legal-content/en/ALL/?uri=CELEX%3A32010D0146"},
+    "GG": {"status": "adequate", "reference": "Commission Decision 2003/821/EC", "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32003D0821"},
+    "IL": {"status": "adequate", "reference": "Commission Decision 2011/61/EU", "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32011D0061"},
+    "IM": {"status": "adequate", "reference": "Commission Decision 2004/411/EC", "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32004D0411"},
+    "JP": {"status": "adequate", "reference": "Commission Implementing Decision (EU) 2019/419", "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=uriserv:OJ.L_.2019.076.01.0001.01.ENG&toc=OJ:L:2019:076:TOC"},
+    "JE": {"status": "adequate", "reference": "Commission Decision 2008/393/EC", "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32008D0393"},
+    "NZ": {"status": "adequate", "reference": "Commission Implementing Decision 2013/65/EU", "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A32013D0065"},
+    "KR": {"status": "adequate", "reference": "Commission Implementing Decision (EU) 2022/254", "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32022D0254"},
+    "CH": {"status": "adequate", "reference": "Commission Decision 2000/518/EC", "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32000D0518"},
+    "GB": {"status": "adequate", "reference": "Commission adequacy decisions for the United Kingdom under the GDPR, renewed December 2025", "url": "https://commission.europa.eu/document/download/b36eedab-43b8-46eb-ac30-a8d1e6e69f51_en?filename=Renewal%20UK%20adequacy%20GDPR.pdf"},
+    "US": {"status": "conditional_dpf", "scope": "Only organisations certified under the EU-US Data Privacy Framework", "reference": "Commission Implementing Decision (EU) 2023/1795", "url": "https://eur-lex.europa.eu/eli/dec_impl/2023/1795/oj"},
+    "UY": {"status": "adequate", "reference": "Commission Implementing Decision 2012/484/EU", "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32012D0484"}
+   },
+   "not_countries": {
+    "european_patent_organisation": {"status": "adequate", "reference": "Commission adequacy decision for the European Patent Organisation (adopted 15 July 2025)", "url": "https://commission.europa.eu/document/download/2687dc39-5217-4165-8db6-b1294dc5b591_en?filename=EPO%20Adequacy%20Decision%20July%202025.pdf"}
+   }
+  },
+  "UK_GDPR": {
+   "exporter_area": "GB",
+   "transfer_mechanism": "UK GDPR Art. 46 safeguards: the ICO's International Data Transfer Agreement (IDTA), the International Data Transfer Addendum to the EU SCCs, or UK binding corporate rules; or an Art. 49 exception",
+   "eea_adequate": true,
+   "destinations": {
+    "AD": {"status": "adequate"},
+    "AR": {"status": "adequate"},
+    "FO": {"status": "adequate"},
+    "GI": {"status": "adequate"},
+    "GG": {"status": "adequate"},
+    "IM": {"status": "adequate"},
+    "IL": {"status": "adequate"},
+    "JE": {"status": "adequate"},
+    "NZ": {"status": "adequate"},
+    "CH": {"status": "adequate"},
+    "UY": {"status": "adequate"},
+    "KR": {"status": "adequate"},
+    "CA": {"status": "partial", "scope": "Only information subject to PIPEDA: private-sector organisations in commercial activity"},
+    "JP": {"status": "partial", "scope": "Only private-sector personal information handling business operators within scope of APPI"},
+    "US": {"status": "conditional_dpf", "scope": "Only transfers under the UK Extension to the EU-US Data Privacy Framework (certified organisations)"}
+   },
+   "not_countries": {
+    "eu_eea_institutions": {"status": "adequate", "scope": "EU/EEA institutions, bodies, offices and agencies"}
+   }
+  }
+ }
+}

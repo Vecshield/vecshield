@@ -1,0 +1,99 @@
+{
+  "thresholds": {
+    "likely": 0.9,
+    "possible": 0.5
+  },
+  "detectors": {
+    "aws_access_key": {
+      "class": "possible",
+      "reason": "Precision 0.923 with a lower bound of 0.667, at or above the 0.5 floor for 'possible'.",
+      "precision": {
+        "observations": 13,
+        "measured": true,
+        "value": 0.923,
+        "interval": [
+          0.667,
+          0.986
+        ],
+        "successes": 12
+      }
+    },
+    "aws_secret_access_key_context": {
+      "class": "uncertain",
+      "reason": "Only 1 independent case(s); too few to measure a precision."
+    },
+    "card_like_number": {
+      "class": "uncertain",
+      "reason": "Only 3 independent case(s); too few to measure a precision."
+    },
+    "credit_card": {
+      "class": "uncertain",
+      "reason": "Only 3 independent case(s); too few to measure a precision."
+    },
+    "database_url_credentials": {
+      "class": "uncertain",
+      "reason": "Only 1 independent case(s); too few to measure a precision."
+    },
+    "email": {
+      "class": "uncertain",
+      "reason": "Only 2 independent case(s); too few to measure a precision."
+    },
+    "exfiltration": {
+      "class": "uncertain",
+      "reason": "Only 1 independent case(s); too few to measure a precision."
+    },
+    "github_token": {
+      "class": "uncertain",
+      "reason": "Only 1 independent case(s); too few to measure a precision."
+    },
+    "instruction_override": {
+      "class": "uncertain",
+      "reason": "Only 2 independent case(s); too few to measure a precision."
+    },
+    "medical_record_context": {
+      "class": "uncertain",
+      "reason": "Only 1 independent case(s); too few to measure a precision."
+    },
+    "presidio:CREDIT_CARD": {
+      "class": "uncertain",
+      "reason": "Only 3 independent case(s); too few to measure a precision."
+    },
+    "presidio:DATE_TIME": {
+      "class": "uncertain",
+      "reason": "Only 1 independent case(s); too few to measure a precision."
+    },
+    "presidio:EMAIL_ADDRESS": {
+      "class": "uncertain",
+      "reason": "Only 1 independent case(s); too few to measure a precision."
+    },
+    "presidio:LOCATION": {
+      "class": "uncertain",
+      "reason": "Only 2 independent case(s); too few to measure a precision."
+    },
+    "presidio:PERSON": {
+      "class": "uncertain",
+      "reason": "Only 3 independent case(s); too few to measure a precision."
+    },
+    "presidio:URL": {
+      "class": "uncertain",
+      "reason": "Only 2 independent case(s); too few to measure a precision."
+    },
+    "role_manipulation": {
+      "class": "uncertain",
+      "reason": "Only 1 independent case(s); too few to measure a precision."
+    },
+    "street_name_context": {
+      "class": "uncertain",
+      "reason": "Only 1 independent case(s); too few to measure a precision."
+    },
+    "stripe_api_key": {
+      "class": "uncertain",
+      "reason": "Only 1 independent case(s); too few to measure a precision."
+    },
+    "us_ssn": {
+      "class": "uncertain",
+      "reason": "Only 1 independent case(s); too few to measure a precision."
+    }
+  },
+  "note": "A class is earned from the lower bound of a measured precision, not its point estimate. A detector that has earned nothing reports 'uncertain' and says why."
+}

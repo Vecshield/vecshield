@@ -1,0 +1,23 @@
+VecShield Community
+Copyright 2026 VecShield contributors
+
+This product includes software developed by the VecShield contributors.
+
+VecShield Community is licensed under the Apache License, Version 2.0.
+
+---
+
+This product optionally depends on the following third-party libraries,
+which are installed separately via the [nlp] extra and are NOT bundled
+with VecShield. Their copyright notices are reproduced here in accordance
+with their respective MIT licenses.
+
+presidio-analyzer
+  Copyright (c) Presidio Contributors.
+  Licensed under the MIT License.
+  https://github.com/microsoft/presidio
+
+spaCy
+  Copyright (C) 2016-2024 ExplosionAI GmbH, 2016 spaCy GmbH, 2015 Matthew Honnibal
+  Licensed under the MIT License.
+  https://github.com/explosion/spaCy

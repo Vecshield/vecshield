@@ -1,0 +1,214 @@
+{
+  "schema": 1,
+  "about": "Curated applicability conditions for server advisories whose exploitability depends on configuration or enabled features. Every entry quotes and cites its primary source. Conditions are prerequisites: all checks must indicate exposure for 'affected_and_exposed'; any check that rules exposure out gives 'affected_not_exposed'; otherwise 'affected_condition_unknown'. Features are read from server_info()['features'] by dotted path.",
+  "reviewed_at": "2026-10-05",
+  "advisories": [
+    {
+      "ids": ["CVE-2025-67818", "GHSA-7v39-2hx7-7c43", "GO-2025-4237"],
+      "product": "weaviate",
+      "condition": {
+        "summary": "Exploitable only when a backup module is enabled (a backup is restored from attacker-influenced data).",
+        "checks": [{"feature": "modules", "kind": "any_prefix", "value": "backup"}],
+        "source_url": "https://weaviate.io/blog/weaviate-security-release-november-2025",
+        "quote": "The Backup modules can also be disabled by removing any backup* entries from the \"enabled_modules\" flag."
+      },
+      "workaround": {
+        "heading": "Vendor security release",
+        "text": "We recommend that impacted customers update their Weaviate installations to fully address the vulnerability. The Backup modules can also be disabled by removing any backup* entries from the \"enabled_modules\" flag.",
+        "source_url": "https://weaviate.io/blog/weaviate-security-release-november-2025"
+      }
+    },
+    {
+      "ids": ["CVE-2025-67819", "GHSA-hmmh-292h-3364", "GO-2025-4238"],
+      "product": "weaviate",
+      "condition": {
+        "summary": "Requires the Shard Movement API (REPLICA_MOVEMENT_ENABLED), which is disabled by default, and shards in the \"Pause file activity\" state.",
+        "checks": [{"feature": "replica_movement_enabled", "kind": "equals",
+                    "exposed": [true, "true", "1"], "not_exposed": [false, "false", "0"]}],
+        "source_url": "https://weaviate.io/blog/weaviate-security-release-november-2025",
+        "quote": "The Shard Movement API is disabled by default, and this vulnerability requires that shards are in \"Pause file activity\" state."
+      },
+      "workaround": {
+        "heading": "Vendor security release",
+        "text": "The Shard movement API can also be explicitly disabled by setting the \"REPLICA_MOVEMENT_ENABLED\" flag to false.",
+        "source_url": "https://weaviate.io/blog/weaviate-security-release-november-2025"
+      }
+    },
+    {
+      "ids": ["CVE-2026-25628", "GHSA-f632-vm87-2m2f"],
+      "product": "qdrant",
+      "condition": {
+        "summary": "Any credential with read-only access can reach POST /logger; turning the file write into configuration takeover needs a writable configuration directory. Qdrant Cloud is not affected.",
+        "checks": [{"feature": "config_dir_writable", "kind": "equals",
+                    "exposed": [true, "true"], "not_exposed": [false, "false"]}],
+        "source_url": "https://github.com/qdrant/qdrant/security/advisories/GHSA-f632-vm87-2m2f",
+        "quote": "Minimal privileges are required (read-only access). ... if configuration directory is writable and `config/local.yaml` does not exist ... This vulnerability does not affect Qdrant cloud as the configuration directory is not writable."
+      }
+    },
+    {
+      "ids": ["CVE-2026-45829", "GHSA-f4j7-r4q5-qw2c", "PYSEC-2026-311"],
+      "product": "chroma",
+      "condition": {
+        "summary": "Pre-authentication RCE in the Python FastAPI server's collection-creation path (embedding function kwargs with trust_remote_code). The Rust frontend is not affected.",
+        "checks": [{"feature": "server_implementation", "kind": "equals",
+                    "exposed": ["python", "fastapi"], "not_exposed": ["rust"]}],
+        "source_url": "https://www.hiddenlayer.com/research/chromatoast-served-pre-auth",
+        "quote": "Favor the Rust-based deployment path (`chroma run`, Docker Hub images since 1.0.0) over the Python FastAPI server. The Rust frontend is not affected."
+      },
+      "workaround": {
+        "heading": "Mitigations (researcher advisory)",
+        "text": "Favor the Rust-based deployment path (`chroma run`, Docker Hub images since 1.0.0) over the Python FastAPI server. The Rust frontend is not affected. If running the Python FastAPI server, restrict network access to the ChromaDB port to trusted clients only.",
+        "source_url": "https://www.hiddenlayer.com/research/chromatoast-served-pre-auth"
+      }
+    },
+    {
+      "ids": ["CVE-2026-45833", "GHSA-36p7-vc44-83pf", "PYSEC-2026-3814"],
+      "product": "chroma",
+      "condition": {
+        "summary": "Post-authentication RCE through update_collection in the Python server; needs a principal with UPDATE_COLLECTION permission.",
+        "checks": [{"feature": "server_implementation", "kind": "equals",
+                    "exposed": ["python", "fastapi"], "not_exposed": ["rust"]}],
+        "source_url": "https://www.hiddenlayer.com/sai-security-advisory/2026-06-chromadb-5",
+        "quote": "Any authenticated user with UPDATE_COLLECTION permission can achieve remote code execution ... This vulnerability affects ChromaDB versions from 0.4.17 to the latest Python release."
+      }
+    },
+    {
+      "ids": ["CVE-2026-45830", "GHSA-2wm9-hf6c-p5cr", "PYSEC-2026-3813"],
+      "product": "chroma",
+      "condition": {
+        "summary": "Cross-tenant collection access by UUID in the Python server; needs an authenticated principal and a known collection UUID.",
+        "checks": [{"feature": "server_implementation", "kind": "equals",
+                    "exposed": ["python", "fastapi"], "not_exposed": ["rust"]}],
+        "source_url": "https://www.hiddenlayer.com/sai-security-advisory/2026-06-chromadb",
+        "quote": "Any authenticated user with a valid collection UUID can read, write, update, or delete data in any tenant's collection ... This vulnerability affects Python ChromaDB versions from 0.4.17 to the latest release."
+      }
+    },
+    {
+      "ids": ["CVE-2026-45831", "GHSA-xph7-9rjv-w5fr", "PYSEC-2026-3815"],
+      "product": "chroma",
+      "condition": {
+        "summary": "Only deployments that use the SimpleRBACAuthorizationProvider in the Python server.",
+        "checks": [
+          {"feature": "server_implementation", "kind": "equals",
+           "exposed": ["python", "fastapi"], "not_exposed": ["rust"]},
+          {"feature": "authz_provider", "kind": "contains", "value": "SimpleRBACAuthorizationProvider"}
+        ],
+        "source_url": "https://github.com/advisories/GHSA-xph7-9rjv-w5fr",
+        "quote": "The SimpleRBACAuthorizationProvider authorization provider in versions 0.5.0 or later of the ChromaDB Python project evaluates whether a user holds a given permission but never checks which tenant, database, or collection that permission applies to."
+      }
+    },
+    {
+      "ids": ["CVE-2025-14847"],
+      "product": "mongodb",
+      "condition": {
+        "summary": "Reachable only when zlib network compression is enabled (it is in the default compressor list).",
+        "checks": [{"feature": "network_compressors", "kind": "contains", "value": "zlib"}],
+        "source_url": "https://jira.mongodb.org/browse/SERVER-115508",
+        "quote": "If you cannot upgrade immediately, disable zlib compression on the MongoDB Server by starting mongod or mongos with a networkMessageCompressors or a net.compression.compressors option that explicitly omits zlib."
+      },
+      "workaround": {
+        "heading": "WORKAROUND (vendor issue)",
+        "text": "We strongly suggest you upgrade immediately. If you cannot upgrade immediately, disable zlib compression on the MongoDB Server by starting mongod or mongos with a networkMessageCompressors or a net.compression.compressors option that explicitly omits zlib. Example safe values include snappy,zstd or disabled",
+        "source_url": "https://jira.mongodb.org/browse/SERVER-115508"
+      }
+    },
+    {
+      "ids": ["CVE-2026-26190", "GHSA-7ppg-37fh-vcr6", "GO-2026-4481"],
+      "product": "milvus",
+      "condition": {
+        "summary": "Requires network access to the metrics/management port 9091.",
+        "checks": [{"feature": "metrics_port_reachable", "kind": "equals",
+                    "exposed": [true, "true"], "not_exposed": [false, "false"]}],
+        "source_url": "https://github.com/milvus-io/milvus/security/advisories/GHSA-7ppg-37fh-vcr6",
+        "quote": "An unauthenticated remote attacker with network access to port 9091 can ..."
+      }
+    },
+    {
+      "ids": ["CVE-2026-23631", "GHSA-8ghh-qpmp-7826"],
+      "product": "redis",
+      "condition": {
+        "summary": "Affects replicas that are (or may be) configured with replica-read-only disabled, on servers with Lua scripting.",
+        "checks": [{"feature": "replica_read_only", "kind": "equals",
+                    "exposed": ["no", false, "false"]}],
+        "source_url": "https://github.com/redis/redis/security/advisories/GHSA-8ghh-qpmp-7826",
+        "quote": "The bug affects only replicas that are configured, or may be configured with `replica-read-only` disabled , and exists in all versions of Redis with Lua scripting"
+      }
+    },
+    {
+      "ids": ["CVE-2022-0543"],
+      "product": "redis",
+      "exclude_from_version_matching": {
+        "reason": "A Debian/Ubuntu packaging defect: upstream Redis version numbers do not identify it, so it is fixed by the distribution's package update, not an upstream release.",
+        "source_url": "https://nvd.nist.gov/vuln/detail/CVE-2022-0543",
+        "quote": "It was discovered, that redis, a persistent key-value database, due to a packaging issue, is prone to a (Debian-specific) Lua sandbox escape, which could result in remote code execution."
+      }
+    },
+    {
+      "ids": ["CVE-2026-3172"],
+      "product": "postgresql",
+      "affected_override": {
+        "ranges": [{"introduced": "0.6.0", "fixed": "0.8.2"}],
+        "source_url": "https://github.com/pgvector/pgvector/issues/959",
+        "quote": "Versions Affected: 0.6.0 to 0.8.1 Fixed Versions: 0.8.2"
+      },
+      "condition": {
+        "summary": "Needs a database user who can create or reindex an HNSW index with parallel workers.",
+        "checks": [{"feature": "max_parallel_maintenance_workers", "kind": "greater_than", "value": 0}],
+        "source_url": "https://github.com/pgvector/pgvector/issues/959",
+        "quote": "A buffer overflow (due to integer wraparound) allows a database user with the ability to create or reindex an HNSW index with parallel workers to leak sensitive data from other relations or crash the database server."
+      }
+    },
+    {
+      "ids": ["CVE-2026-18022"],
+      "product": "postgresql",
+      "condition": {
+        "summary": "Only 32-bit builds are affected.",
+        "checks": [{"any_of": [
+          {"feature": "pointer_bits", "kind": "equals", "exposed": [32, "32"], "not_exposed": [64, "64"]},
+          {"feature": "version_string", "kind": "regex", "exposed": "\\b32-bit\\b", "not_exposed": "\\b64-bit\\b"}
+        ]}],
+        "source_url": "https://nvd.nist.gov/vuln/detail/CVE-2026-18022",
+        "quote": "Integer wraparound in IVFFlat index build in pgvector before 0.8.6 allows a database user to write data out-of-bounds, which could lead to arbitrary code execution. Only 32-bit systems are affected."
+      }
+    },
+    {
+      "ids": ["CVE-2026-103484"],
+      "product": "postgresql",
+      "component": "pgvector",
+      "advisory": {
+        "summary": "pgvector buffer overflow in IVFFlat index build",
+        "details": "IVFFlat index build in pgvector before 0.8.7 allows a database user to write data out-of-bounds, which can lead to arbitrary code execution.",
+        "severity_label": "HIGH",
+        "severity_basis": "no CVSS score was published when this entry was added; the vendor states the out-of-bounds write can lead to arbitrary code execution by a database user",
+        "published": "2026-10-01",
+        "references": ["https://github.com/pgvector/pgvector/issues/1036",
+                       "https://github.com/pgvector/pgvector/commit/ee00d39ab30c2a7cf9510abf9288c624d91db156",
+                       "https://security-tracker.debian.org/tracker/CVE-2026-103484"],
+        "source_url": "https://security-tracker.debian.org/tracker/CVE-2026-103484",
+        "quote": "IVFFlat index build in pgvector before 0.8.7 allows a database user to write data out-of-bounds, which can lead to arbitrary code execution."
+      },
+      "affected_override": {
+        "ranges": [{"fixed": "0.8.7"}],
+        "source_url": "https://security-tracker.debian.org/tracker/CVE-2026-103484",
+        "quote": "IVFFlat index build in pgvector before 0.8.7 allows a database user to write data out-of-bounds"
+      }
+    }
+  ],
+  "products": {
+    "qdrant": {
+      "upgrade_notes": {
+        "text": "When upgrading Qdrant, upgrade to the latest patch version of each intermediate minor version first. For example, if you are running version 1.15 and want to upgrade to 1.17, you must first upgrade all cluster nodes to 1.16.3 before upgrading to 1.17.",
+        "source_url": "https://qdrant.tech/documentation/upgrades/"
+      }
+    },
+    "postgresql": {
+      "components": {
+        "client": "This vulnerability exists in a client library or client application only.",
+        "contrib module": "This vulnerability exists in a contrib module. Contrib modules are not installed by default when PostgreSQL is installed from source. They may be installed by binary packages.",
+        "client contrib module": "This vulnerability exists in a contrib module used on the client only.",
+        "packaging": "This vulnerability exists in PostgreSQL binary packaging, e.g. an installer or RPM."
+      },
+      "components_source_url": "https://www.postgresql.org/support/security/"
+    }
+  }
+}

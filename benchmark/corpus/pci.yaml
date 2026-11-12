@@ -1,0 +1,48 @@
+# Payment card data. The published test numbers pass a Luhn check by design,
+# which is exactly why a checksum cannot clear them.
+items:
+  - id: pci-live-shaped
+    text: "Customer read out 4539 5788 9012 3489 over the phone."
+    expect: sensitive
+    labels: [pci]
+    reason: >
+      Luhn-valid and not a published test number. (The first draft of this item
+      used a number that failed a Luhn check, so it recorded correct detector
+      behaviour as a false negative — the corpus was wrong, not the detector.)
+    decided_by: seed
+
+  - id: pci-visa-test
+    text: "Charge failed for card 4111 1111 1111 1111 in the sandbox."
+    expect: sensitive
+    labels: [pci]
+    disputed_by: [published_example]
+    reason: "Visa publishes this for testing; it passes Luhn by design."
+    decided_by: seed
+
+  - id: pci-amex-test
+    text: "Test card 378282246310005 declined as expected."
+    expect: sensitive
+    labels: [pci]
+    disputed_by: [published_example]
+    reason: "American Express publishes this test number."
+    decided_by: seed
+
+  - id: clean-order-number
+    text: "Order 4111222233334444555 shipped on Tuesday."
+    expect: clean
+    reason: >
+      Nineteen digits, not a card number. A detector that matches any long
+      digit run will flag order and invoice numbers forever.
+    decided_by: seed
+
+  - id: clean-phone-run
+    text: "Reach the depot on 0044 20 7946 0958 between nine and five."
+    expect: clean
+    reason: "A phone number, not an account number."
+    decided_by: seed
+
+  - id: clean-invalid-checksum
+    text: "Reference 4111 1111 1111 1112 recorded against the claim."
+    expect: clean
+    reason: "Fails a Luhn check; not a card number."
+    decided_by: seed

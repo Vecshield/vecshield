@@ -1,0 +1,55 @@
+name: Bug report
+description: Something behaves differently from how it is documented.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you expected, and what you got instead.
+    validations: { required: true }
+  - type: textarea
+    id: repro
+    attributes:
+      label: How to reproduce
+      description: >-
+        Commands, config, and the store kind. Please redact real values
+        rather than pasting them.
+      placeholder: |
+        1. vecshield-platform audit --connector chroma --path ...
+        2. ...
+    validations: { required: true }
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: "`vecshield-platform --version`, or the commit you are on."
+    validations: { required: true }
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Detection library (vecshield)
+        - CLI
+        - Server / API
+        - Web console
+        - Connector
+        - Compliance / reporting
+        - Demo
+        - Other / not sure
+    validations: { required: true }
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: OS, Python version, how you installed it, and any extras.
+  - type: checkboxes
+    id: nosecrets
+    attributes:
+      label: Before you post
+      options:
+        - label: >-
+            I have removed real personal data, credentials and customer
+            content from everything pasted above.
+          required: true

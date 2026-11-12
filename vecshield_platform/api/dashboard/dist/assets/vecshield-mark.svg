@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="VecShield">
+  <title>VecShield</title>
+  <defs>
+    <linearGradient id="vs-right" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1b7bfb"/>
+      <stop offset="1" stop-color="#0a55c0"/>
+    </linearGradient>
+    <linearGradient id="vs-left" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0b3f86"/>
+      <stop offset="1" stop-color="#031e46"/>
+    </linearGradient>
+    <linearGradient id="vs-layer-a" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8ce6fe"/>
+      <stop offset="1" stop-color="#3cc3fc"/>
+    </linearGradient>
+    <linearGradient id="vs-layer-b" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5ed3fd"/>
+      <stop offset="1" stop-color="#1aa6f9"/>
+    </linearGradient>
+    <linearGradient id="vs-layer-c" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3fbffc"/>
+      <stop offset="1" stop-color="#0d8bee"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Shield, split down the centre: the two tones are the mark's signature. -->
+  <path d="M32 3 L59 12.5 V32.5 C59 46.5 47.2 57.2 32 61 C16.8 57.2 5 46.5 5 32.5 V12.5 Z"
+        fill="url(#vs-right)"/>
+  <path d="M32 3 L5 12.5 V32.5 C5 46.5 16.8 57.2 32 61 V3 Z" fill="url(#vs-left)"/>
+
+  <!-- Three stacked layers: a vector store is a stack, not a single surface.
+       Drawn bottom-up so each one overlaps the one below it. -->
+  <path d="M32 42 L48 47 L32 52 L16 47 Z" fill="url(#vs-layer-c)"/>
+  <path d="M32 33 L50 38.5 L32 44 L14 38.5 Z" fill="url(#vs-layer-b)"/>
+  <path d="M32 24 L52 30 L32 36 L12 30 Z" fill="url(#vs-layer-a)"/>
+
+  <!-- The graph over the layers: embeddings are related, not filed. Kept
+       lighter than the artwork it came from: at 32px heavier nodes merge into
+       a single white blob and the layers behind them disappear. -->
+  <g stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" fill="none">
+    <path d="M32 21.5 L19.5 32.5 M32 21.5 L44.5 32.5 M19.5 32.5 L44.5 32.5
+             M19.5 32.5 L32 44.5 M44.5 32.5 L32 44.5"/>
+  </g>
+  <g fill="#ffffff">
+    <circle cx="32" cy="21.5" r="3.5"/>
+    <circle cx="19.5" cy="32.5" r="3.5"/>
+    <circle cx="44.5" cy="32.5" r="3.5"/>
+    <circle cx="32" cy="44.5" r="3.5"/>
+  </g>
+</svg>

@@ -1,0 +1,44 @@
+# The VecShield demo: a seeded vector-store estate and the web console.
+#
+#   docker compose up --build        start (first run seeds the estate)
+#   docker compose down              stop, keeping the estate and any triage
+#   docker compose down -v           stop and discard the estate
+#
+# Everything is synthetic and everything runs locally. No API keys, no network
+# calls, no external vector database: the estate is seeded into a Chroma
+# directory inside the container's volume.
+
+services:
+  vecshield:
+    build:
+      # The repository root, so the image can install the package itself.
+      context: ..
+      dockerfile: demo/Dockerfile
+    image: vecshield-demo:0.1.0
+    container_name: vecshield-demo
+    ports:
+      # Published on loopback only. The console is an admin interface; do not
+      # expose it on 0.0.0.0 without putting real authentication in front.
+      - "127.0.0.1:8088:8088"
+    volumes:
+      # The seeded estate, scan history, audit log and generated admin
+      # password. Remove with `docker compose down -v`.
+      - vecshield-demo-state:/data
+    environment:
+      # Regex detectors only, so the image stays small and offline. The NLP
+      # extra adds recall on names, addresses and locations; see
+      # docs/nlp_models.md for running the demo with it.
+      VECSHIELD_NLP_MODE: disabled
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8088/healthz', timeout=3).status == 200 else 1)"]
+      # The first start seeds the estate and runs its assessments, which takes
+      # appreciably longer than a restart; start_period covers that.
+      start_period: 180s
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  vecshield-demo-state:

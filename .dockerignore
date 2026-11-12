@@ -1,0 +1,41 @@
+# Allowlist build context. The image needs only the two Python packages, the
+# packaging metadata (NOTICE included: pyproject declares it in license-files,
+# so the build fails without it), and -- for air-gapped builds -- ./wheelhouse.
+# Everything else in a working tree, local state (demo-state/, *.db, audit
+# logs), editor config, tests, node_modules and virtualenvs among it, must
+# never be baked into an image. Add a path here deliberately, not by default.
+#
+# The demo image has its own, wider context: demo/Dockerfile.dockerignore.
+*
+!pyproject.toml
+!README.md
+!LICENSE*
+!NOTICE
+!vecshield/
+!vecshield_platform/
+!wheelhouse/
+
+# The console is served from the hand-written dist/ bundle; the dashboard's
+# tests and Node tooling are not part of the image.
+vecshield_platform/api/dashboard/*
+!vecshield_platform/api/dashboard/dist/
+
+# Never ship dependencies, caches, build output or state from inside the
+# allowed trees (these rules come last so they override the allowlist).
+**/node_modules
+**/.venv*
+**/venv
+**/__pycache__
+**/*.py[cod]
+**/*.egg-info
+**/build
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+**/.DS_Store
+**/demo-state
+**/*.db*
+**/*.sqlite*
+**/*.jsonl
+**/*.state
+**/.env*

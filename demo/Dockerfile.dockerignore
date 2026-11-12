@@ -1,0 +1,45 @@
+# Build context for demo/Dockerfile.
+#
+# BuildKit prefers <dockerfile>.dockerignore over the context root's
+# .dockerignore, so this file widens the context for the demo image only: it
+# adds demo/, which the production image at the repository root must not ship.
+# Same allowlist discipline — local state never enters the context.
+*
+!pyproject.toml
+!README.md
+!LICENSE*
+!NOTICE
+!vecshield/
+!vecshield_platform/
+!demo/
+!wheelhouse/
+
+# The console is served from the hand-written dist/ bundle; the dashboard's
+# tests and Node tooling are not part of the image.
+vecshield_platform/api/dashboard/*
+!vecshield_platform/api/dashboard/dist/
+
+# A seeded estate from a previous local run must never be baked in: the image
+# seeds its own at first boot.
+demo/demo-state
+demo/.demo
+
+# Never ship dependencies, caches, build output or state from inside the
+# allowed trees (these rules come last so they override the allowlist).
+**/node_modules
+**/.venv*
+**/venv
+**/__pycache__
+**/*.py[cod]
+**/*.egg-info
+**/build
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+**/.DS_Store
+**/demo-state
+**/*.db*
+**/*.sqlite*
+**/*.jsonl
+**/*.state
+**/.env*

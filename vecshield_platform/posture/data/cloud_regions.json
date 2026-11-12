@@ -1,0 +1,948 @@
+{
+ "_about": "Cloud region identifier -> country (ISO 3166-1 alpha-2), built from each provider's official region list. A region absent from this file is reported as 'not in the catalogue' and never guessed. Sovereign partitions are flagged with 'sovereign'.",
+ "_as_of": "2026-09-29",
+ "_sources": {
+  "aws": [
+   "https://docs.aws.amazon.com/global-infrastructure/latest/regions/aws-regions.html",
+   "https://docs.aws.amazon.com/whitepapers/latest/aws-fault-isolation-boundaries/partitions.html",
+   "https://aws.amazon.com/blogs/security/architecting-a-secure-landing-zone-in-the-aws-european-sovereign-cloud/",
+   "botocore 1.43.40 data/endpoints.json (AWS SDK partition metadata: aws-cn, aws-us-gov, aws-eusc region codes)"
+  ],
+  "gcp": [
+   "https://cloud.google.com/compute/docs/regions-zones"
+  ],
+  "azure": [
+   "https://learn.microsoft.com/en-us/azure/reliability/regions-list",
+   "https://docs.azure.cn/en-us/reliability/regions-list",
+   "https://learn.microsoft.com/en-us/azure/china/overview-regions",
+   "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-overview-dod",
+   "https://learn.microsoft.com/en-us/dotnet/api/microsoft.azure.documents.locationnames?view=azure-dotnet"
+  ],
+  "pinecone": [
+   "https://docs.pinecone.io/guides/index-data/create-an-index"
+  ],
+  "eu_members": [
+   "https://european-union.europa.eu/principles-countries-history/eu-countries_en"
+  ],
+  "eea_members": [
+   "https://www.efta.int/eea"
+  ]
+ },
+ "_notes": [
+  "AWS standard partition: all 34 Regions in the 'Available AWS Regions' table (2026-09-29).",
+  "AWS ISO/ISO-B/ISO-E/ISO-F (classified) partitions are omitted: their locations are not published.",
+  "GCP: every region in the Compute Engine regions and zones table (43). Country is taken from the zone location column; 'England' is recorded as GB.",
+  "Azure: every region in the public 'List of Azure regions' table (57), plus Azure Government and Azure operated by 21Vianet regions. 'access: restricted' marks regions Microsoft lists as restricted-access. Azure 'East Asia' is Hong Kong (HK); 'Southeast Asia' is Singapore.",
+  "Hong Kong is recorded as HK (its own ISO 3166-1 code). For 28 CFR Part 202 purposes, 'China' includes Hong Kong and Macau (28 CFR 202.208); residency.py applies that separately."
+ ],
+ "jurisdictions": {
+  "EU": [
+   "AT",
+   "BE",
+   "BG",
+   "HR",
+   "CY",
+   "CZ",
+   "DK",
+   "EE",
+   "FI",
+   "FR",
+   "DE",
+   "GR",
+   "HU",
+   "IE",
+   "IT",
+   "LV",
+   "LT",
+   "LU",
+   "MT",
+   "NL",
+   "PL",
+   "PT",
+   "RO",
+   "SK",
+   "SI",
+   "ES",
+   "SE"
+  ],
+  "EEA_NON_EU": [
+   "IS",
+   "LI",
+   "NO"
+  ]
+ },
+ "countries": {
+  "AE": "United Arab Emirates",
+  "AT": "Austria",
+  "AU": "Australia",
+  "BE": "Belgium",
+  "BH": "Bahrain",
+  "BR": "Brazil",
+  "CA": "Canada",
+  "CH": "Switzerland",
+  "CL": "Chile",
+  "CN": "China",
+  "DE": "Germany",
+  "DK": "Denmark",
+  "ES": "Spain",
+  "FI": "Finland",
+  "FR": "France",
+  "GB": "United Kingdom",
+  "HK": "Hong Kong",
+  "ID": "Indonesia",
+  "IE": "Ireland",
+  "IL": "Israel",
+  "IN": "India",
+  "IT": "Italy",
+  "JP": "Japan",
+  "KR": "Republic of Korea",
+  "MX": "Mexico",
+  "MY": "Malaysia",
+  "NL": "Netherlands",
+  "NO": "Norway",
+  "NZ": "New Zealand",
+  "PL": "Poland",
+  "QA": "Qatar",
+  "SA": "Saudi Arabia",
+  "SE": "Sweden",
+  "SG": "Singapore",
+  "TH": "Thailand",
+  "TW": "Taiwan",
+  "US": "United States",
+  "ZA": "South Africa"
+ },
+ "clouds": {
+  "aws": {
+   "us-east-1": {
+    "name": "US East (N. Virginia)",
+    "country": "US",
+    "partition": "aws",
+    "location": "United States of America"
+   },
+   "us-east-2": {
+    "name": "US East (Ohio)",
+    "country": "US",
+    "partition": "aws",
+    "location": "United States of America"
+   },
+   "us-west-1": {
+    "name": "US West (N. California)",
+    "country": "US",
+    "partition": "aws",
+    "location": "United States of America"
+   },
+   "us-west-2": {
+    "name": "US West (Oregon)",
+    "country": "US",
+    "partition": "aws",
+    "location": "United States of America"
+   },
+   "af-south-1": {
+    "name": "Africa (Cape Town)",
+    "country": "ZA",
+    "partition": "aws",
+    "location": "South Africa"
+   },
+   "ap-east-1": {
+    "name": "Asia Pacific (Hong Kong)",
+    "country": "HK",
+    "partition": "aws",
+    "location": "Hong Kong"
+   },
+   "ap-south-2": {
+    "name": "Asia Pacific (Hyderabad)",
+    "country": "IN",
+    "partition": "aws",
+    "location": "India"
+   },
+   "ap-southeast-3": {
+    "name": "Asia Pacific (Jakarta)",
+    "country": "ID",
+    "partition": "aws",
+    "location": "Indonesia"
+   },
+   "ap-southeast-5": {
+    "name": "Asia Pacific (Malaysia)",
+    "country": "MY",
+    "partition": "aws",
+    "location": "Malaysia"
+   },
+   "ap-southeast-4": {
+    "name": "Asia Pacific (Melbourne)",
+    "country": "AU",
+    "partition": "aws",
+    "location": "Australia"
+   },
+   "ap-south-1": {
+    "name": "Asia Pacific (Mumbai)",
+    "country": "IN",
+    "partition": "aws",
+    "location": "India"
+   },
+   "ap-southeast-6": {
+    "name": "Asia Pacific (New Zealand)",
+    "country": "NZ",
+    "partition": "aws",
+    "location": "New Zealand"
+   },
+   "ap-northeast-3": {
+    "name": "Asia Pacific (Osaka)",
+    "country": "JP",
+    "partition": "aws",
+    "location": "Japan"
+   },
+   "ap-northeast-2": {
+    "name": "Asia Pacific (Seoul)",
+    "country": "KR",
+    "partition": "aws",
+    "location": "South Korea"
+   },
+   "ap-southeast-1": {
+    "name": "Asia Pacific (Singapore)",
+    "country": "SG",
+    "partition": "aws",
+    "location": "Singapore"
+   },
+   "ap-southeast-2": {
+    "name": "Asia Pacific (Sydney)",
+    "country": "AU",
+    "partition": "aws",
+    "location": "Australia"
+   },
+   "ap-east-2": {
+    "name": "Asia Pacific (Taipei)",
+    "country": "TW",
+    "partition": "aws",
+    "location": "Taiwan"
+   },
+   "ap-southeast-7": {
+    "name": "Asia Pacific (Thailand)",
+    "country": "TH",
+    "partition": "aws",
+    "location": "Thailand"
+   },
+   "ap-northeast-1": {
+    "name": "Asia Pacific (Tokyo)",
+    "country": "JP",
+    "partition": "aws",
+    "location": "Japan"
+   },
+   "ca-central-1": {
+    "name": "Canada (Central)",
+    "country": "CA",
+    "partition": "aws",
+    "location": "Canada"
+   },
+   "ca-west-1": {
+    "name": "Canada West (Calgary)",
+    "country": "CA",
+    "partition": "aws",
+    "location": "Canada"
+   },
+   "eu-central-1": {
+    "name": "Europe (Frankfurt)",
+    "country": "DE",
+    "partition": "aws",
+    "location": "Germany"
+   },
+   "eu-west-1": {
+    "name": "Europe (Ireland)",
+    "country": "IE",
+    "partition": "aws",
+    "location": "Ireland"
+   },
+   "eu-west-2": {
+    "name": "Europe (London)",
+    "country": "GB",
+    "partition": "aws",
+    "location": "United Kingdom"
+   },
+   "eu-south-1": {
+    "name": "Europe (Milan)",
+    "country": "IT",
+    "partition": "aws",
+    "location": "Italy"
+   },
+   "eu-west-3": {
+    "name": "Europe (Paris)",
+    "country": "FR",
+    "partition": "aws",
+    "location": "France"
+   },
+   "eu-south-2": {
+    "name": "Europe (Spain)",
+    "country": "ES",
+    "partition": "aws",
+    "location": "Spain"
+   },
+   "eu-north-1": {
+    "name": "Europe (Stockholm)",
+    "country": "SE",
+    "partition": "aws",
+    "location": "Sweden"
+   },
+   "eu-central-2": {
+    "name": "Europe (Zurich)",
+    "country": "CH",
+    "partition": "aws",
+    "location": "Switzerland"
+   },
+   "il-central-1": {
+    "name": "Israel (Tel Aviv)",
+    "country": "IL",
+    "partition": "aws",
+    "location": "Israel"
+   },
+   "mx-central-1": {
+    "name": "Mexico (Central)",
+    "country": "MX",
+    "partition": "aws",
+    "location": "Mexico"
+   },
+   "me-south-1": {
+    "name": "Middle East (Bahrain)",
+    "country": "BH",
+    "partition": "aws",
+    "location": "Bahrain"
+   },
+   "me-central-1": {
+    "name": "Middle East (UAE)",
+    "country": "AE",
+    "partition": "aws",
+    "location": "United Arab Emirates"
+   },
+   "sa-east-1": {
+    "name": "South America (São Paulo)",
+    "country": "BR",
+    "partition": "aws",
+    "location": "Brazil"
+   },
+   "cn-north-1": {
+    "name": "China (Beijing)",
+    "country": "CN",
+    "partition": "aws-cn",
+    "location": "Beijing, China",
+    "sovereign": "china"
+   },
+   "cn-northwest-1": {
+    "name": "China (Ningxia)",
+    "country": "CN",
+    "partition": "aws-cn",
+    "location": "Ningxia, China",
+    "sovereign": "china"
+   },
+   "us-gov-west-1": {
+    "name": "AWS GovCloud (US-West)",
+    "country": "US",
+    "partition": "aws-us-gov",
+    "location": "United States",
+    "sovereign": "us_government"
+   },
+   "us-gov-east-1": {
+    "name": "AWS GovCloud (US-East)",
+    "country": "US",
+    "partition": "aws-us-gov",
+    "location": "United States",
+    "sovereign": "us_government"
+   },
+   "eusc-de-east-1": {
+    "name": "AWS European Sovereign Cloud (Germany)",
+    "country": "DE",
+    "partition": "aws-eusc",
+    "location": "Brandenburg, Germany",
+    "sovereign": "eu_sovereign"
+   }
+  },
+  "gcp": {
+   "africa-south1": {
+    "name": "africa-south1",
+    "country": "ZA",
+    "location": "Johannesburg, South Africa"
+   },
+   "asia-east1": {
+    "name": "asia-east1",
+    "country": "TW",
+    "location": "Changhua County, Taiwan"
+   },
+   "asia-east2": {
+    "name": "asia-east2",
+    "country": "HK",
+    "location": "Hong Kong"
+   },
+   "asia-northeast1": {
+    "name": "asia-northeast1",
+    "country": "JP",
+    "location": "Tokyo, Japan"
+   },
+   "asia-northeast2": {
+    "name": "asia-northeast2",
+    "country": "JP",
+    "location": "Osaka, Japan"
+   },
+   "asia-northeast3": {
+    "name": "asia-northeast3",
+    "country": "KR",
+    "location": "Seoul, South Korea"
+   },
+   "asia-south1": {
+    "name": "asia-south1",
+    "country": "IN",
+    "location": "Mumbai, India"
+   },
+   "asia-south2": {
+    "name": "asia-south2",
+    "country": "IN",
+    "location": "Delhi, India"
+   },
+   "asia-southeast1": {
+    "name": "asia-southeast1",
+    "country": "SG",
+    "location": "Jurong West, Singapore"
+   },
+   "asia-southeast2": {
+    "name": "asia-southeast2",
+    "country": "ID",
+    "location": "Jakarta, Indonesia"
+   },
+   "asia-southeast3": {
+    "name": "asia-southeast3",
+    "country": "TH",
+    "location": "Bangkok, Thailand"
+   },
+   "australia-southeast1": {
+    "name": "australia-southeast1",
+    "country": "AU",
+    "location": "Sydney, Australia"
+   },
+   "australia-southeast2": {
+    "name": "australia-southeast2",
+    "country": "AU",
+    "location": "Melbourne, Australia"
+   },
+   "europe-central2": {
+    "name": "europe-central2",
+    "country": "PL",
+    "location": "Warsaw, Poland"
+   },
+   "europe-north1": {
+    "name": "europe-north1",
+    "country": "FI",
+    "location": "Hamina, Finland"
+   },
+   "europe-north2": {
+    "name": "europe-north2",
+    "country": "SE",
+    "location": "Stockholm, Sweden"
+   },
+   "europe-southwest1": {
+    "name": "europe-southwest1",
+    "country": "ES",
+    "location": "Madrid, Spain"
+   },
+   "europe-west1": {
+    "name": "europe-west1",
+    "country": "BE",
+    "location": "St. Ghislain, Belgium"
+   },
+   "europe-west10": {
+    "name": "europe-west10",
+    "country": "DE",
+    "location": "Berlin, Germany"
+   },
+   "europe-west12": {
+    "name": "europe-west12",
+    "country": "IT",
+    "location": "Turin, Italy"
+   },
+   "europe-west2": {
+    "name": "europe-west2",
+    "country": "GB",
+    "location": "London, England"
+   },
+   "europe-west3": {
+    "name": "europe-west3",
+    "country": "DE",
+    "location": "Frankfurt, Germany"
+   },
+   "europe-west4": {
+    "name": "europe-west4",
+    "country": "NL",
+    "location": "Eemshaven, Netherlands"
+   },
+   "europe-west6": {
+    "name": "europe-west6",
+    "country": "CH",
+    "location": "Zurich, Switzerland"
+   },
+   "europe-west8": {
+    "name": "europe-west8",
+    "country": "IT",
+    "location": "Milan, Italy"
+   },
+   "europe-west9": {
+    "name": "europe-west9",
+    "country": "FR",
+    "location": "Paris, France"
+   },
+   "me-central1": {
+    "name": "me-central1",
+    "country": "QA",
+    "location": "Doha, Qatar"
+   },
+   "me-central2": {
+    "name": "me-central2",
+    "country": "SA",
+    "location": "Dammam, Saudi Arabia"
+   },
+   "me-west1": {
+    "name": "me-west1",
+    "country": "IL",
+    "location": "Tel Aviv, Israel"
+   },
+   "northamerica-northeast1": {
+    "name": "northamerica-northeast1",
+    "country": "CA",
+    "location": "Montréal, Québec"
+   },
+   "northamerica-northeast2": {
+    "name": "northamerica-northeast2",
+    "country": "CA",
+    "location": "Toronto, Ontario"
+   },
+   "northamerica-south1": {
+    "name": "northamerica-south1",
+    "country": "MX",
+    "location": "Queretaro, Mexico"
+   },
+   "southamerica-east1": {
+    "name": "southamerica-east1",
+    "country": "BR",
+    "location": "Osasco, São Paulo, Brazil"
+   },
+   "southamerica-west1": {
+    "name": "southamerica-west1",
+    "country": "CL",
+    "location": "Santiago, Chile"
+   },
+   "us-central1": {
+    "name": "us-central1",
+    "country": "US",
+    "location": "Council Bluffs, Iowa"
+   },
+   "us-east1": {
+    "name": "us-east1",
+    "country": "US",
+    "location": "Moncks Corner, South Carolina"
+   },
+   "us-east4": {
+    "name": "us-east4",
+    "country": "US",
+    "location": "Ashburn, Virginia"
+   },
+   "us-east5": {
+    "name": "us-east5",
+    "country": "US",
+    "location": "Columbus, Ohio"
+   },
+   "us-south1": {
+    "name": "us-south1",
+    "country": "US",
+    "location": "Dallas, Texas"
+   },
+   "us-west1": {
+    "name": "us-west1",
+    "country": "US",
+    "location": "The Dalles, Oregon"
+   },
+   "us-west2": {
+    "name": "us-west2",
+    "country": "US",
+    "location": "Los Angeles, California"
+   },
+   "us-west3": {
+    "name": "us-west3",
+    "country": "US",
+    "location": "Salt Lake City, Utah"
+   },
+   "us-west4": {
+    "name": "us-west4",
+    "country": "US",
+    "location": "Las Vegas, Nevada"
+   }
+  },
+  "azure": {
+   "australiacentral": {
+    "name": "Australia Central",
+    "country": "AU",
+    "location": "Canberra"
+   },
+   "australiacentral2": {
+    "name": "Australia Central 2",
+    "country": "AU",
+    "location": "Canberra",
+    "access": "restricted"
+   },
+   "australiaeast": {
+    "name": "Australia East",
+    "country": "AU",
+    "location": "New South Wales"
+   },
+   "australiasoutheast": {
+    "name": "Australia Southeast",
+    "country": "AU",
+    "location": "Victoria"
+   },
+   "austriaeast": {
+    "name": "Austria East",
+    "country": "AT",
+    "location": "Vienna"
+   },
+   "belgiumcentral": {
+    "name": "Belgium Central",
+    "country": "BE",
+    "location": "Brussels"
+   },
+   "brazilsouth": {
+    "name": "Brazil South",
+    "country": "BR",
+    "location": "Sao Paulo State"
+   },
+   "brazilsoutheast": {
+    "name": "Brazil Southeast",
+    "country": "BR",
+    "location": "Rio",
+    "access": "restricted"
+   },
+   "canadacentral": {
+    "name": "Canada Central",
+    "country": "CA",
+    "location": "Toronto"
+   },
+   "canadaeast": {
+    "name": "Canada East",
+    "country": "CA",
+    "location": "Quebec"
+   },
+   "centralindia": {
+    "name": "Central India",
+    "country": "IN",
+    "location": "Pune"
+   },
+   "centralus": {
+    "name": "Central US",
+    "country": "US",
+    "location": "Iowa"
+   },
+   "chilecentral": {
+    "name": "Chile Central",
+    "country": "CL",
+    "location": "Santiago"
+   },
+   "denmarkeast": {
+    "name": "Denmark East",
+    "country": "DK",
+    "location": "Copenhagen"
+   },
+   "eastasia": {
+    "name": "East Asia",
+    "country": "HK",
+    "location": "Hong Kong"
+   },
+   "eastus": {
+    "name": "East US",
+    "country": "US",
+    "location": "Virginia"
+   },
+   "eastus2": {
+    "name": "East US 2",
+    "country": "US",
+    "location": "Virginia"
+   },
+   "francecentral": {
+    "name": "France Central",
+    "country": "FR",
+    "location": "Paris"
+   },
+   "francesouth": {
+    "name": "France South",
+    "country": "FR",
+    "location": "Marseille",
+    "access": "restricted"
+   },
+   "germanynorth": {
+    "name": "Germany North",
+    "country": "DE",
+    "location": "Berlin",
+    "access": "restricted"
+   },
+   "germanywestcentral": {
+    "name": "Germany West Central",
+    "country": "DE",
+    "location": "Frankfurt"
+   },
+   "indiasouthcentral": {
+    "name": "India South Central",
+    "country": "IN",
+    "location": "Hyderabad"
+   },
+   "indonesiacentral": {
+    "name": "Indonesia Central",
+    "country": "ID",
+    "location": "Jakarta"
+   },
+   "israelcentral": {
+    "name": "Israel Central",
+    "country": "IL",
+    "location": "Israel"
+   },
+   "italynorth": {
+    "name": "Italy North",
+    "country": "IT",
+    "location": "Milan"
+   },
+   "japaneast": {
+    "name": "Japan East",
+    "country": "JP",
+    "location": "Tokyo, Saitama"
+   },
+   "japanwest": {
+    "name": "Japan West",
+    "country": "JP",
+    "location": "Osaka"
+   },
+   "koreacentral": {
+    "name": "Korea Central",
+    "country": "KR",
+    "location": "Seoul"
+   },
+   "koreasouth": {
+    "name": "Korea South",
+    "country": "KR",
+    "location": "Busan"
+   },
+   "malaysiawest": {
+    "name": "Malaysia West",
+    "country": "MY",
+    "location": "Kuala Lumpur"
+   },
+   "mexicocentral": {
+    "name": "Mexico Central",
+    "country": "MX",
+    "location": "Querétaro State"
+   },
+   "newzealandnorth": {
+    "name": "New Zealand North",
+    "country": "NZ",
+    "location": "Auckland"
+   },
+   "northcentralus": {
+    "name": "North Central US",
+    "country": "US",
+    "location": "Illinois"
+   },
+   "northeurope": {
+    "name": "North Europe",
+    "country": "IE",
+    "location": "Ireland"
+   },
+   "norwayeast": {
+    "name": "Norway East",
+    "country": "NO",
+    "location": "Norway"
+   },
+   "norwaywest": {
+    "name": "Norway West",
+    "country": "NO",
+    "location": "Norway",
+    "access": "restricted"
+   },
+   "polandcentral": {
+    "name": "Poland Central",
+    "country": "PL",
+    "location": "Warsaw"
+   },
+   "qatarcentral": {
+    "name": "Qatar Central",
+    "country": "QA",
+    "location": "Doha"
+   },
+   "southafricanorth": {
+    "name": "South Africa North",
+    "country": "ZA",
+    "location": "Johannesburg"
+   },
+   "southafricawest": {
+    "name": "South Africa West",
+    "country": "ZA",
+    "location": "Cape Town",
+    "access": "restricted"
+   },
+   "southcentralus": {
+    "name": "South Central US",
+    "country": "US",
+    "location": "Texas"
+   },
+   "southindia": {
+    "name": "South India",
+    "country": "IN",
+    "location": "Chennai"
+   },
+   "southeastasia": {
+    "name": "Southeast Asia",
+    "country": "SG",
+    "location": "Singapore"
+   },
+   "spaincentral": {
+    "name": "Spain Central",
+    "country": "ES",
+    "location": "Madrid"
+   },
+   "swedencentral": {
+    "name": "Sweden Central",
+    "country": "SE",
+    "location": "Gävle"
+   },
+   "switzerlandnorth": {
+    "name": "Switzerland North",
+    "country": "CH",
+    "location": "Zurich"
+   },
+   "switzerlandwest": {
+    "name": "Switzerland West",
+    "country": "CH",
+    "location": "Geneva",
+    "access": "restricted"
+   },
+   "uaecentral": {
+    "name": "UAE Central",
+    "country": "AE",
+    "location": "Abu Dhabi",
+    "access": "restricted"
+   },
+   "uaenorth": {
+    "name": "UAE North",
+    "country": "AE",
+    "location": "Dubai"
+   },
+   "uksouth": {
+    "name": "UK South",
+    "country": "GB",
+    "location": "London"
+   },
+   "ukwest": {
+    "name": "UK West",
+    "country": "GB",
+    "location": "Cardiff"
+   },
+   "westcentralus": {
+    "name": "West Central US",
+    "country": "US",
+    "location": "Wyoming"
+   },
+   "westeurope": {
+    "name": "West Europe",
+    "country": "NL",
+    "location": "Netherlands"
+   },
+   "westindia": {
+    "name": "West India",
+    "country": "IN",
+    "location": "Mumbai"
+   },
+   "westus": {
+    "name": "West US",
+    "country": "US",
+    "location": "California"
+   },
+   "westus2": {
+    "name": "West US 2",
+    "country": "US",
+    "location": "Washington"
+   },
+   "westus3": {
+    "name": "West US 3",
+    "country": "US",
+    "location": "Phoenix"
+   },
+   "usgovvirginia": {
+    "name": "US Gov Virginia",
+    "country": "US",
+    "location": "United States",
+    "sovereign": "us_government"
+   },
+   "usgovarizona": {
+    "name": "US Gov Arizona",
+    "country": "US",
+    "location": "United States",
+    "sovereign": "us_government"
+   },
+   "usgovtexas": {
+    "name": "US Gov Texas",
+    "country": "US",
+    "location": "United States",
+    "sovereign": "us_government"
+   },
+   "usdodeast": {
+    "name": "US DoD East",
+    "country": "US",
+    "location": "United States",
+    "sovereign": "us_government"
+   },
+   "usdodcentral": {
+    "name": "US DoD Central",
+    "country": "US",
+    "location": "United States",
+    "sovereign": "us_government"
+   },
+   "chinaeast": {
+    "name": "China East",
+    "country": "CN",
+    "location": "China",
+    "sovereign": "china"
+   },
+   "chinaeast2": {
+    "name": "China East 2",
+    "country": "CN",
+    "location": "China",
+    "sovereign": "china"
+   },
+   "chinaeast3": {
+    "name": "China East 3",
+    "country": "CN",
+    "location": "China",
+    "sovereign": "china"
+   },
+   "chinanorth": {
+    "name": "China North",
+    "country": "CN",
+    "location": "China",
+    "sovereign": "china"
+   },
+   "chinanorth2": {
+    "name": "China North 2",
+    "country": "CN",
+    "location": "China",
+    "sovereign": "china"
+   },
+   "chinanorth3": {
+    "name": "China North 3",
+    "country": "CN",
+    "location": "China",
+    "sovereign": "china"
+   }
+  }
+ },
+ "provider_regions": {
+  "_about": "Region identifiers of hosted services that place data in a hyperscaler region under the same identifier. Mapping is cloud:region.",
+  "pinecone": {
+   "us-east-1": "aws:us-east-1",
+   "us-west-2": "aws:us-west-2",
+   "eu-west-1": "aws:eu-west-1",
+   "eu-central-1": "aws:eu-central-1",
+   "ap-southeast-1": "aws:ap-southeast-1",
+   "us-central1": "gcp:us-central1",
+   "europe-west4": "gcp:europe-west4",
+   "eastus2": "azure:eastus2"
+  }
+ }
+}

@@ -1,0 +1,2286 @@
+{
+  "items": 112,
+  "overall_note": "Scores are reported per group, per label, and per detector. There is no single number: an aggregate would average unlike detectors and hide the one that matters.",
+  "by_group": {
+    "clean": {
+      "items": 5,
+      "true_positive": 0,
+      "false_positive": 1,
+      "false_negative": 0,
+      "true_negative": 4,
+      "precision": {
+        "observations": 1,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      },
+      "recall": {
+        "observations": 0,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      }
+    },
+    "injection": {
+      "items": 55,
+      "true_positive": 23,
+      "false_positive": 0,
+      "false_negative": 0,
+      "true_negative": 32,
+      "precision": {
+        "observations": 23,
+        "measured": true,
+        "value": 1.0,
+        "interval": [
+          0.857,
+          1.0
+        ],
+        "successes": 23
+      },
+      "recall": {
+        "observations": 23,
+        "measured": true,
+        "value": 1.0,
+        "interval": [
+          0.857,
+          1.0
+        ],
+        "successes": 23
+      }
+    },
+    "pci": {
+      "items": 6,
+      "true_positive": 3,
+      "false_positive": 1,
+      "false_negative": 0,
+      "true_negative": 2,
+      "precision": {
+        "observations": 4,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      },
+      "recall": {
+        "observations": 3,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      }
+    },
+    "phi": {
+      "items": 5,
+      "true_positive": 1,
+      "false_positive": 0,
+      "false_negative": 1,
+      "true_negative": 3,
+      "precision": {
+        "observations": 1,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      },
+      "recall": {
+        "observations": 2,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      }
+    },
+    "pii": {
+      "items": 10,
+      "true_positive": 3,
+      "false_positive": 1,
+      "false_negative": 3,
+      "true_negative": 3,
+      "precision": {
+        "observations": 4,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      },
+      "recall": {
+        "observations": 6,
+        "measured": true,
+        "value": 0.5,
+        "interval": [
+          0.188,
+          0.812
+        ],
+        "successes": 3
+      }
+    },
+    "secrets": {
+      "items": 31,
+      "true_positive": 17,
+      "false_positive": 1,
+      "false_negative": 0,
+      "true_negative": 13,
+      "precision": {
+        "observations": 18,
+        "measured": true,
+        "value": 0.944,
+        "interval": [
+          0.742,
+          0.99
+        ],
+        "successes": 17
+      },
+      "recall": {
+        "observations": 17,
+        "measured": true,
+        "value": 1.0,
+        "interval": [
+          0.816,
+          1.0
+        ],
+        "successes": 17
+      }
+    }
+  },
+  "by_family": {
+    "classification": {
+      "items": 57,
+      "true_positive": 24,
+      "false_positive": 4,
+      "false_negative": 4,
+      "true_negative": 25,
+      "precision": {
+        "observations": 28,
+        "measured": true,
+        "value": 0.857,
+        "interval": [
+          0.685,
+          0.943
+        ],
+        "successes": 24
+      },
+      "recall": {
+        "observations": 28,
+        "measured": true,
+        "value": 0.857,
+        "interval": [
+          0.685,
+          0.943
+        ],
+        "successes": 24
+      }
+    },
+    "injection": {
+      "items": 55,
+      "true_positive": 23,
+      "false_positive": 0,
+      "false_negative": 0,
+      "true_negative": 32,
+      "precision": {
+        "observations": 23,
+        "measured": true,
+        "value": 1.0,
+        "interval": [
+          0.857,
+          1.0
+        ],
+        "successes": 23
+      },
+      "recall": {
+        "observations": 23,
+        "measured": true,
+        "value": 1.0,
+        "interval": [
+          0.857,
+          1.0
+        ],
+        "successes": 23
+      }
+    }
+  },
+  "by_detector": {
+    "aws_access_key": {
+      "fired_on": 15,
+      "cases": 13,
+      "true_positive": 12,
+      "false_positive": 1,
+      "precision": {
+        "observations": 13,
+        "measured": true,
+        "value": 0.923,
+        "interval": [
+          0.667,
+          0.986
+        ],
+        "successes": 12
+      }
+    },
+    "aws_secret_access_key_context": {
+      "fired_on": 1,
+      "cases": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "precision": {
+        "observations": 1,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      }
+    },
+    "card_like_number": {
+      "fired_on": 3,
+      "cases": 3,
+      "true_positive": 2,
+      "false_positive": 1,
+      "precision": {
+        "observations": 3,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      }
+    },
+    "credit_card": {
+      "fired_on": 3,
+      "cases": 3,
+      "true_positive": 3,
+      "false_positive": 0,
+      "precision": {
+        "observations": 3,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      }
+    },
+    "database_url_credentials": {
+      "fired_on": 1,
+      "cases": 1,
+      "true_positive": 0,
+      "false_positive": 1,
+      "precision": {
+        "observations": 1,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      }
+    },
+    "delimiter_injection": {
+      "fired_on": 1,
+      "cases": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "precision": {
+        "observations": 1,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      }
+    },
+    "email": {
+      "fired_on": 2,
+      "cases": 2,
+      "true_positive": 2,
+      "false_positive": 0,
+      "precision": {
+        "observations": 2,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      }
+    },
+    "encoded_payload": {
+      "fired_on": 1,
+      "cases": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "precision": {
+        "observations": 1,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      }
+    },
+    "encoding_evasion": {
+      "fired_on": 6,
+      "cases": 5,
+      "true_positive": 5,
+      "false_positive": 0,
+      "precision": {
+        "observations": 5,
+        "measured": true,
+        "value": 1.0,
+        "interval": [
+          0.566,
+          1.0
+        ],
+        "successes": 5
+      }
+    },
+    "exfiltration": {
+      "fired_on": 12,
+      "cases": 10,
+      "true_positive": 10,
+      "false_positive": 0,
+      "precision": {
+        "observations": 10,
+        "measured": true,
+        "value": 1.0,
+        "interval": [
+          0.722,
+          1.0
+        ],
+        "successes": 10
+      }
+    },
+    "github_token": {
+      "fired_on": 1,
+      "cases": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "precision": {
+        "observations": 1,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      }
+    },
+    "hidden_content": {
+      "fired_on": 1,
+      "cases": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "precision": {
+        "observations": 1,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      }
+    },
+    "instruction_override": {
+      "fired_on": 12,
+      "cases": 11,
+      "true_positive": 11,
+      "false_positive": 0,
+      "precision": {
+        "observations": 11,
+        "measured": true,
+        "value": 1.0,
+        "interval": [
+          0.741,
+          1.0
+        ],
+        "successes": 11
+      }
+    },
+    "medical_record_context": {
+      "fired_on": 1,
+      "cases": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "precision": {
+        "observations": 1,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      }
+    },
+    "policy_bypass": {
+      "fired_on": 1,
+      "cases": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "precision": {
+        "observations": 1,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      }
+    },
+    "retrieval_manipulation": {
+      "fired_on": 2,
+      "cases": 2,
+      "true_positive": 2,
+      "false_positive": 0,
+      "precision": {
+        "observations": 2,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      }
+    },
+    "role_manipulation": {
+      "fired_on": 4,
+      "cases": 4,
+      "true_positive": 4,
+      "false_positive": 0,
+      "precision": {
+        "observations": 4,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      }
+    },
+    "street_name_context": {
+      "fired_on": 1,
+      "cases": 1,
+      "true_positive": 0,
+      "false_positive": 1,
+      "precision": {
+        "observations": 1,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      }
+    },
+    "stripe_api_key": {
+      "fired_on": 1,
+      "cases": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "precision": {
+        "observations": 1,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      }
+    },
+    "system_impersonation": {
+      "fired_on": 2,
+      "cases": 2,
+      "true_positive": 2,
+      "false_positive": 0,
+      "precision": {
+        "observations": 2,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      }
+    },
+    "tool_abuse": {
+      "fired_on": 1,
+      "cases": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "precision": {
+        "observations": 1,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      }
+    },
+    "us_ssn": {
+      "fired_on": 1,
+      "cases": 1,
+      "true_positive": 1,
+      "false_positive": 0,
+      "precision": {
+        "observations": 1,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      }
+    }
+  },
+  "by_label": {
+    "injection": {
+      "expected": 23,
+      "detected_as_this_label": 23,
+      "label_recall": {
+        "observations": 23,
+        "measured": true,
+        "value": 1.0,
+        "interval": [
+          0.857,
+          1.0
+        ],
+        "successes": 23
+      }
+    },
+    "pci": {
+      "expected": 3,
+      "detected_as_this_label": 3,
+      "label_recall": {
+        "observations": 3,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      }
+    },
+    "phi": {
+      "expected": 2,
+      "detected_as_this_label": 1,
+      "label_recall": {
+        "observations": 2,
+        "measured": false,
+        "note": "Fewer than 5 observations; no rate is reported."
+      }
+    },
+    "pii": {
+      "expected": 6,
+      "detected_as_this_label": 3,
+      "label_recall": {
+        "observations": 6,
+        "measured": true,
+        "value": 0.5,
+        "interval": [
+          0.188,
+          0.812
+        ],
+        "successes": 3
+      }
+    },
+    "secret": {
+      "expected": 17,
+      "detected_as_this_label": 17,
+      "label_recall": {
+        "observations": 17,
+        "measured": true,
+        "value": 1.0,
+        "interval": [
+          0.816,
+          1.0
+        ],
+        "successes": 17
+      }
+    }
+  },
+  "counter_signals": {
+    "items_needing_a_counter_signal": 12,
+    "explained": 10,
+    "coverage": {
+      "observations": 12,
+      "measured": true,
+      "value": 0.833,
+      "interval": [
+        0.552,
+        0.953
+      ],
+      "successes": 10
+    },
+    "unexplained": [
+      "secret-aws-secret-docs",
+      "secret-aws-neg-anonymised"
+    ]
+  },
+  "failures": [
+    {
+      "id": "clean-config-placeholders",
+      "group": "clean",
+      "expect": "clean",
+      "outcome": "false_positive",
+      "flagged": true,
+      "labels": [
+        "secret"
+      ],
+      "detectors": [
+        "database_url_credentials"
+      ],
+      "counter_signals": [
+        "placeholder_token"
+      ],
+      "missing_counter_signals": [],
+      "reason": "A template with placeholder tokens rather than values. The detector does flag it, so this stays a false positive \u2014 but it must at least say the value is made of placeholder words, or a reviewer has no way to tell a template from a leak without opening the chunk.\n"
+    },
+    {
+      "id": "clean-invalid-checksum",
+      "group": "pci",
+      "expect": "clean",
+      "outcome": "false_positive",
+      "flagged": true,
+      "labels": [
+        "pci"
+      ],
+      "detectors": [
+        "card_like_number"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Fails a Luhn check; not a card number."
+    },
+    {
+      "id": "phi-lay-description",
+      "group": "phi",
+      "expect": "sensitive",
+      "outcome": "false_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Health information about an identifiable relative. Whether it is ePHI is a legal determination, not a detector's \u2014 which is why the criterion model asks a human.\n"
+    },
+    {
+      "id": "pii-name-address-prose",
+      "group": "pii",
+      "expect": "sensitive",
+      "outcome": "false_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A named individual with a postal address."
+    },
+    {
+      "id": "clean-fictional-character",
+      "group": "pii",
+      "expect": "clean",
+      "outcome": "false_positive",
+      "flagged": true,
+      "labels": [
+        "pii"
+      ],
+      "detectors": [
+        "street_name_context"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A fictional character and a fictional address."
+    },
+    {
+      "id": "pii-dob-spelled-out",
+      "group": "pii",
+      "expect": "sensitive",
+      "outcome": "false_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A full date of birth, introduced by the words rather than the abbreviation. The detector matches \"DOB 1990-02-14\" and not this, which is how a support transcript is actually written.\n"
+    },
+    {
+      "id": "pii-uk-postal-address",
+      "group": "pii",
+      "expect": "sensitive",
+      "outcome": "false_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A full UK postal address with postcode. There is no address or UK postcode detector, so this identifies a household and is not seen.\n"
+    },
+    {
+      "id": "secret-aws-secret-docs",
+      "group": "secrets",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "secret"
+      ],
+      "detectors": [
+        "aws_secret_access_key_context"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [
+        "published_example"
+      ],
+      "reason": "The AWS documentation secret key."
+    },
+    {
+      "id": "secret-aws-neg-anonymised",
+      "group": "secrets",
+      "expect": "clean",
+      "outcome": "false_positive",
+      "flagged": true,
+      "labels": [
+        "secret"
+      ],
+      "detectors": [
+        "aws_access_key"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [
+        "placeholder_token"
+      ],
+      "reason": "An anonymised placeholder in a post-mortem. It is a valid key *shape*, deliberately, which is why it is the hardest negative here: nothing is exposed and there is nothing to rotate, so a reviewer sent to this chunk has no work to do.\n"
+    }
+  ],
+  "results": [
+    {
+      "id": "clean-security-runbook",
+      "group": "clean",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Security advice containing no credential."
+    },
+    {
+      "id": "clean-config-placeholders",
+      "group": "clean",
+      "expect": "clean",
+      "outcome": "false_positive",
+      "flagged": true,
+      "labels": [
+        "secret"
+      ],
+      "detectors": [
+        "database_url_credentials"
+      ],
+      "counter_signals": [
+        "placeholder_token"
+      ],
+      "missing_counter_signals": [],
+      "reason": "A template with placeholder tokens rather than values. The detector does flag it, so this stays a false positive \u2014 but it must at least say the value is made of placeholder words, or a reviewer has no way to tell a template from a leak without opening the chunk.\n"
+    },
+    {
+      "id": "clean-redacted-already",
+      "group": "clean",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Already redacted; the last four digits alone are not a PAN."
+    },
+    {
+      "id": "clean-high-entropy-prose",
+      "group": "clean",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Random-looking words, no structure any detector should claim."
+    },
+    {
+      "id": "clean-numbers-table",
+      "group": "clean",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Tabular figures that resemble nothing sensitive."
+    },
+    {
+      "id": "injection-direct",
+      "group": "injection",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "injection"
+      ],
+      "detectors": [
+        "exfiltration",
+        "instruction_override"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A live override attempt sitting in retrievable content."
+    },
+    {
+      "id": "injection-role-override",
+      "group": "injection",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "injection"
+      ],
+      "detectors": [
+        "role_manipulation"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A role-reassignment payload."
+    },
+    {
+      "id": "injection-quoted-in-guidance",
+      "group": "injection",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "injection"
+      ],
+      "detectors": [
+        "instruction_override"
+      ],
+      "counter_signals": [
+        "quoted_in_text"
+      ],
+      "missing_counter_signals": [],
+      "reason": "Security documentation quoting a payload. It should still be flagged \u2014 a quoted payload is still retrievable \u2014 but a reviewer must be told it is a quotation, or the security team drowns in its own writing.\n"
+    },
+    {
+      "id": "clean-ordinary-instruction",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Contains \"ignore the previous\" in an ordinary business sentence. This is the sentence that separates a usable detector from a keyword match.\n"
+    },
+    {
+      "id": "clean-prompt-word",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Describes a prompt without attacking one."
+    },
+    {
+      "id": "clean-system-word",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Mentions a system; no instruction to a model."
+    },
+    {
+      "id": "clean-press-enter",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A UI instruction to a person. 'Enter' is a key, not a mode."
+    },
+    {
+      "id": "clean-switch-tab",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Navigating a UI. 'Switch to' without a persona or mode is ordinary prose."
+    },
+    {
+      "id": "clean-act-as-advocates",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "'Act as' describing staff roles, not reassigning a model's role."
+    },
+    {
+      "id": "clean-run-python",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Setup instructions. Naming an interpreter is not tool abuse."
+    },
+    {
+      "id": "clean-database-pool",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [
+        "placeholder_token"
+      ],
+      "missing_counter_signals": [],
+      "reason": "Engineering guidance mentioning a database."
+    },
+    {
+      "id": "clean-read-schema-docs",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Reading documentation about a database is not reading a database."
+    },
+    {
+      "id": "clean-logged-in",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "'You are now' followed by a state, not a persona."
+    },
+    {
+      "id": "clean-maintenance-mode",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Operations runbook. Maintenance mode is a server state."
+    },
+    {
+      "id": "clean-android-developer-mode",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Device settings. Developer mode on a phone is not a jailbreak of a model."
+    },
+    {
+      "id": "clean-spec-sheet-system",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A spec sheet. A 'System:' line is a field label, not a forged chat turn."
+    },
+    {
+      "id": "clean-credits-developer",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Package credits written as key/value lines."
+    },
+    {
+      "id": "clean-password-reset",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [
+        "placeholder_token"
+      ],
+      "missing_counter_signals": [],
+      "reason": "A help-desk procedure. Sending a reset link to the account owner is not exfiltration."
+    },
+    {
+      "id": "clean-token-header",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [
+        "placeholder_token"
+      ],
+      "missing_counter_signals": [],
+      "reason": "API documentation."
+    },
+    {
+      "id": "clean-service-account-key",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Cloud setup documentation."
+    },
+    {
+      "id": "clean-no-restrictions",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A product limit, not a request to drop a model's safety policy."
+    },
+    {
+      "id": "clean-actual-goal",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Planning prose using 'actual goal'."
+    },
+    {
+      "id": "clean-context-menu",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "'Context' here is a menu."
+    },
+    {
+      "id": "clean-comply-hipaa",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A compliance reminder."
+    },
+    {
+      "id": "clean-webhook-data",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Integration documentation mentioning a webhook and data."
+    },
+    {
+      "id": "clean-user-guide-heading",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A markdown heading that begins with 'User', not a forged turn boundary."
+    },
+    {
+      "id": "clean-bom",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A byte-order mark at the start of an exported file."
+    },
+    {
+      "id": "clean-emoji-zwj",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A zero-width joiner inside an emoji sequence (woman technologist)."
+    },
+    {
+      "id": "clean-persian-zwnj",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Persian uses ZWNJ inside words ('I want to book an appointment')."
+    },
+    {
+      "id": "clean-subdivision-flag",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "The England flag is a black flag followed by tag letters and a cancel tag."
+    },
+    {
+      "id": "clean-russian-text",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Real Russian prose ('the patient was discharged home'). Cyrillic is not a disguise unless it is mixed into Latin words."
+    },
+    {
+      "id": "clean-hebrew-rlm",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A right-to-left mark keeping punctuation in place in Hebrew text."
+    },
+    {
+      "id": "clean-presigned-image",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A presigned S3 URL carries an access key id and signature by design."
+    },
+    {
+      "id": "clean-cache-busting-image",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "An image with an ordinary version parameter."
+    },
+    {
+      "id": "injection-cyrillic-homoglyph",
+      "group": "injection",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "injection"
+      ],
+      "detectors": [
+        "encoding_evasion",
+        "exfiltration",
+        "instruction_override"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A Cyrillic o inside 'ignore' defeats a Latin-only pattern."
+    },
+    {
+      "id": "injection-greek-homoglyph",
+      "group": "injection",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "injection"
+      ],
+      "detectors": [
+        "encoding_evasion",
+        "exfiltration",
+        "instruction_override"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "The same evasion with a Greek alpha."
+    },
+    {
+      "id": "injection-soft-hyphen",
+      "group": "injection",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "injection"
+      ],
+      "detectors": [
+        "encoding_evasion",
+        "exfiltration",
+        "instruction_override"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Soft hyphens render as nothing and split the trigger words."
+    },
+    {
+      "id": "injection-variation-selector",
+      "group": "injection",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "injection"
+      ],
+      "detectors": [
+        "encoding_evasion",
+        "instruction_override"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Variation selectors are invisible and split the trigger words."
+    },
+    {
+      "id": "injection-zero-width-split",
+      "group": "injection",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "injection"
+      ],
+      "detectors": [
+        "encoding_evasion",
+        "exfiltration",
+        "instruction_override"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A zero-width space inside a trigger word."
+    },
+    {
+      "id": "injection-tag-smuggling",
+      "group": "injection",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "injection"
+      ],
+      "detectors": [
+        "encoding_evasion",
+        "instruction_override"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "An instruction written in Unicode tag characters, invisible to a reviewer."
+    },
+    {
+      "id": "injection-base64-wrapped",
+      "group": "injection",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "injection"
+      ],
+      "detectors": [
+        "encoded_payload",
+        "exfiltration",
+        "instruction_override"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A base64-wrapped override."
+    },
+    {
+      "id": "injection-static-exfil-image",
+      "group": "injection",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "injection"
+      ],
+      "detectors": [
+        "exfiltration"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A rendered image whose query string already carries an AWS key id: zero-click exfiltration."
+    },
+    {
+      "id": "injection-static-exfil-email",
+      "group": "injection",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "injection"
+      ],
+      "detectors": [
+        "exfiltration"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "The same with a patient email address in the query."
+    },
+    {
+      "id": "injection-placeholder-exfil",
+      "group": "injection",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "injection"
+      ],
+      "detectors": [
+        "exfiltration"
+      ],
+      "counter_signals": [
+        "reserved_domain"
+      ],
+      "missing_counter_signals": [],
+      "reason": "An image the model is asked to fill with the conversation."
+    },
+    {
+      "id": "injection-dan-mode",
+      "group": "injection",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "injection"
+      ],
+      "detectors": [
+        "policy_bypass",
+        "role_manipulation"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A named jailbreak mode."
+    },
+    {
+      "id": "injection-unrestricted-persona",
+      "group": "injection",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "injection"
+      ],
+      "detectors": [
+        "role_manipulation"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Persona reassignment plus refusal suppression."
+    },
+    {
+      "id": "injection-act-as-jailbroken",
+      "group": "injection",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "injection"
+      ],
+      "detectors": [
+        "role_manipulation"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "'Act as' with a model persona as its object."
+    },
+    {
+      "id": "injection-forged-turn",
+      "group": "injection",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "injection"
+      ],
+      "detectors": [
+        "exfiltration",
+        "system_impersonation"
+      ],
+      "counter_signals": [
+        "reserved_domain"
+      ],
+      "missing_counter_signals": [],
+      "reason": "A forged system turn ordering exfiltration to an address."
+    },
+    {
+      "id": "injection-chatml",
+      "group": "injection",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "injection"
+      ],
+      "detectors": [
+        "delimiter_injection",
+        "exfiltration",
+        "instruction_override"
+      ],
+      "counter_signals": [
+        "placeholder_token"
+      ],
+      "missing_counter_signals": [],
+      "reason": "Forged chat-template delimiters around an override."
+    },
+    {
+      "id": "injection-retrieval-override",
+      "group": "injection",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "injection"
+      ],
+      "detectors": [
+        "retrieval_manipulation"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Overrides the other retrieved passages (ATLAS AML.T0071)."
+    },
+    {
+      "id": "injection-hidden-span",
+      "group": "injection",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "injection"
+      ],
+      "detectors": [
+        "exfiltration",
+        "hidden_content"
+      ],
+      "counter_signals": [
+        "placeholder_token"
+      ],
+      "missing_counter_signals": [],
+      "reason": "CSS-hidden exfiltration instruction."
+    },
+    {
+      "id": "injection-credential-file",
+      "group": "injection",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "injection"
+      ],
+      "detectors": [
+        "tool_abuse"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Agent tool abuse against a credential file."
+    },
+    {
+      "id": "injection-supersedes",
+      "group": "injection",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "injection"
+      ],
+      "detectors": [
+        "instruction_override",
+        "system_impersonation"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "An override stated as precedence, behind a bare 'SYSTEM:' line. Found by re-scanning the demo stores: once a bare 'SYSTEM:' became a supporting signal, this payload was missed until the precedence phrasing was covered.\n"
+    },
+    {
+      "id": "clean-policy-supersedes",
+      "group": "injection",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Document control language. It supersedes versions, not instructions to a model."
+    },
+    {
+      "id": "injection-conceal",
+      "group": "injection",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "injection"
+      ],
+      "detectors": [
+        "instruction_override",
+        "retrieval_manipulation"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Concealment plus retrieval manipulation."
+    },
+    {
+      "id": "pci-live-shaped",
+      "group": "pci",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "pci"
+      ],
+      "detectors": [
+        "card_like_number",
+        "credit_card"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Luhn-valid and not a published test number. (The first draft of this item used a number that failed a Luhn check, so it recorded correct detector behaviour as a false negative \u2014 the corpus was wrong, not the detector.)\n"
+    },
+    {
+      "id": "pci-visa-test",
+      "group": "pci",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "pci"
+      ],
+      "detectors": [
+        "card_like_number",
+        "credit_card"
+      ],
+      "counter_signals": [
+        "published_example"
+      ],
+      "missing_counter_signals": [],
+      "reason": "Visa publishes this for testing; it passes Luhn by design."
+    },
+    {
+      "id": "pci-amex-test",
+      "group": "pci",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "pci"
+      ],
+      "detectors": [
+        "credit_card"
+      ],
+      "counter_signals": [
+        "published_example"
+      ],
+      "missing_counter_signals": [],
+      "reason": "American Express publishes this test number."
+    },
+    {
+      "id": "clean-order-number",
+      "group": "pci",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Nineteen digits, not a card number. A detector that matches any long digit run will flag order and invoice numbers forever.\n"
+    },
+    {
+      "id": "clean-phone-run",
+      "group": "pci",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A phone number, not an account number."
+    },
+    {
+      "id": "clean-invalid-checksum",
+      "group": "pci",
+      "expect": "clean",
+      "outcome": "false_positive",
+      "flagged": true,
+      "labels": [
+        "pci"
+      ],
+      "detectors": [
+        "card_like_number"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Fails a Luhn check; not a card number."
+    },
+    {
+      "id": "phi-record",
+      "group": "phi",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "phi"
+      ],
+      "detectors": [
+        "medical_record_context"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A named patient with a record number and a diagnosis code."
+    },
+    {
+      "id": "phi-lay-description",
+      "group": "phi",
+      "expect": "sensitive",
+      "outcome": "false_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Health information about an identifiable relative. Whether it is ePHI is a legal determination, not a detector's \u2014 which is why the criterion model asks a human.\n"
+    },
+    {
+      "id": "clean-medical-fiction",
+      "group": "phi",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Fiction about medicine identifies no one."
+    },
+    {
+      "id": "clean-policy-health",
+      "group": "phi",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A benefits policy; no individual's health data."
+    },
+    {
+      "id": "clean-icd-in-reference",
+      "group": "phi",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A code in a reference table, attached to nobody. A detector keyed on code shapes alone will flag every clinical glossary.\n"
+    },
+    {
+      "id": "pii-email-real-shape",
+      "group": "pii",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "pii"
+      ],
+      "detectors": [
+        "email"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "An address at a routable domain."
+    },
+    {
+      "id": "pii-email-reserved-domain",
+      "group": "pii",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "pii"
+      ],
+      "detectors": [
+        "email"
+      ],
+      "counter_signals": [
+        "placeholder_token",
+        "reserved_domain"
+      ],
+      "missing_counter_signals": [],
+      "reason": ".test is reserved by RFC 6761 and cannot route."
+    },
+    {
+      "id": "pii-ssn-published-example",
+      "group": "pii",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "pii"
+      ],
+      "detectors": [
+        "us_ssn"
+      ],
+      "counter_signals": [
+        "published_example"
+      ],
+      "missing_counter_signals": [],
+      "reason": "The Social Security Administration's published example number."
+    },
+    {
+      "id": "pii-name-address-prose",
+      "group": "pii",
+      "expect": "sensitive",
+      "outcome": "false_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A named individual with a postal address."
+    },
+    {
+      "id": "clean-public-figure-role",
+      "group": "pii",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A public office in a news sentence. Treating every named role as personal data makes the finding list meaningless.\n"
+    },
+    {
+      "id": "clean-fictional-character",
+      "group": "pii",
+      "expect": "clean",
+      "outcome": "false_positive",
+      "flagged": true,
+      "labels": [
+        "pii"
+      ],
+      "detectors": [
+        "street_name_context"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A fictional character and a fictional address."
+    },
+    {
+      "id": "clean-policy-text",
+      "group": "pii",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Talks about personal data without containing any."
+    },
+    {
+      "id": "clean-support-template",
+      "group": "pii",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A template with no customer detail in it."
+    },
+    {
+      "id": "pii-dob-spelled-out",
+      "group": "pii",
+      "expect": "sensitive",
+      "outcome": "false_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A full date of birth, introduced by the words rather than the abbreviation. The detector matches \"DOB 1990-02-14\" and not this, which is how a support transcript is actually written.\n"
+    },
+    {
+      "id": "pii-uk-postal-address",
+      "group": "pii",
+      "expect": "sensitive",
+      "outcome": "false_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A full UK postal address with postcode. There is no address or UK postcode detector, so this identifies a household and is not seen.\n"
+    },
+    {
+      "id": "secret-aws-live",
+      "group": "secrets",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "secret"
+      ],
+      "detectors": [
+        "aws_access_key"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Shaped as a live AWS access key id and not a published example."
+    },
+    {
+      "id": "secret-aws-docs",
+      "group": "secrets",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "secret"
+      ],
+      "detectors": [
+        "aws_access_key"
+      ],
+      "counter_signals": [
+        "published_example"
+      ],
+      "missing_counter_signals": [],
+      "reason": "AWS prints this key in its own documentation. A detector should still flag the shape, but must say it is a published example \u2014 a reviewer who is not told that wastes a rotation.\n"
+    },
+    {
+      "id": "secret-aws-secret-docs",
+      "group": "secrets",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "secret"
+      ],
+      "detectors": [
+        "aws_secret_access_key_context"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [
+        "published_example"
+      ],
+      "reason": "The AWS documentation secret key."
+    },
+    {
+      "id": "secret-stripe-test",
+      "group": "secrets",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "secret"
+      ],
+      "detectors": [
+        "stripe_api_key"
+      ],
+      "counter_signals": [
+        "vendor_test_prefix"
+      ],
+      "missing_counter_signals": [],
+      "reason": "Stripe reserves sk_test_ for test mode; it cannot move money."
+    },
+    {
+      "id": "secret-in-fixture-collection",
+      "group": "secrets",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "secret"
+      ],
+      "detectors": [
+        "github_token"
+      ],
+      "counter_signals": [
+        "non_production_scope"
+      ],
+      "missing_counter_signals": [],
+      "reason": "Shaped like a GitHub token, in a collection labelled as fixtures."
+    },
+    {
+      "id": "secret-quoted-guidance",
+      "group": "secrets",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "secret"
+      ],
+      "detectors": [
+        "aws_access_key"
+      ],
+      "counter_signals": [
+        "quoted_in_text"
+      ],
+      "missing_counter_signals": [],
+      "reason": "Security guidance about keys, quoting one. A detector that cannot tell this from a leak floods the queue with its own documentation.\n"
+    },
+    {
+      "id": "clean-base64-blob",
+      "group": "secrets",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Base64 image data. High entropy, no credential."
+    },
+    {
+      "id": "clean-uuid",
+      "group": "secrets",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A UUID is not a secret."
+    },
+    {
+      "id": "clean-git-sha",
+      "group": "secrets",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A commit hash looks random and authenticates nothing."
+    },
+    {
+      "id": "clean-key-word-no-key",
+      "group": "secrets",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Talks about a key without containing one."
+    },
+    {
+      "id": "secret-aws-neg-short",
+      "group": "secrets",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "AKIA prefix but 15 trailing characters, not 16. Not a key shape."
+    },
+    {
+      "id": "secret-aws-neg-lowercase",
+      "group": "secrets",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Lowercase. AWS key ids are uppercase; a case-insensitive match here is a false positive."
+    },
+    {
+      "id": "secret-aws-neg-base64",
+      "group": "secrets",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A base64 blob of similar length and alphabet. Flagging it is a false positive."
+    },
+    {
+      "id": "secret-aws-neg-uuid",
+      "group": "secrets",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A UUID that happens to begin with the prefix. Hyphens break the key shape."
+    },
+    {
+      "id": "secret-aws-neg-sha",
+      "group": "secrets",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A 40-character hex hash. Long, high-entropy, and not a credential."
+    },
+    {
+      "id": "secret-aws-neg-prose",
+      "group": "secrets",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Discusses keys without containing one. A policy document must not be flagged."
+    },
+    {
+      "id": "secret-aws-neg-variable",
+      "group": "secrets",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A variable reference, which is the correct pattern. Flagging it punishes good practice."
+    },
+    {
+      "id": "secret-aws-neg-redacted",
+      "group": "secrets",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "Already redacted. Nothing is exposed and there is nothing to rotate."
+    },
+    {
+      "id": "secret-aws-neg-asana",
+      "group": "secrets",
+      "expect": "clean",
+      "outcome": "true_negative",
+      "flagged": false,
+      "labels": [],
+      "detectors": [],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A different 20-character uppercase token. Length alone must not trigger it."
+    },
+    {
+      "id": "secret-aws-neg-anonymised",
+      "group": "secrets",
+      "expect": "clean",
+      "outcome": "false_positive",
+      "flagged": true,
+      "labels": [
+        "secret"
+      ],
+      "detectors": [
+        "aws_access_key"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [
+        "placeholder_token"
+      ],
+      "reason": "An anonymised placeholder in a post-mortem. It is a valid key *shape*, deliberately, which is why it is the hardest negative here: nothing is exposed and there is nothing to rotate, so a reviewer sent to this chunk has no work to do.\n"
+    },
+    {
+      "id": "secret-aws-terraform",
+      "group": "secrets",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "secret"
+      ],
+      "detectors": [
+        "aws_access_key"
+      ],
+      "counter_signals": [
+        "quoted_in_text"
+      ],
+      "missing_counter_signals": [],
+      "reason": "A live-shaped key checked into Terraform, which is where they usually leak."
+    },
+    {
+      "id": "secret-aws-json-config",
+      "group": "secrets",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "secret"
+      ],
+      "detectors": [
+        "aws_access_key"
+      ],
+      "counter_signals": [
+        "quoted_in_text"
+      ],
+      "missing_counter_signals": [],
+      "reason": "A key in a serialized configuration blob."
+    },
+    {
+      "id": "secret-aws-log-line",
+      "group": "secrets",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "secret"
+      ],
+      "detectors": [
+        "aws_access_key"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A key leaked into an application log, a common ingestion path into a RAG store."
+    },
+    {
+      "id": "secret-aws-runbook-prose",
+      "group": "secrets",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "secret"
+      ],
+      "detectors": [
+        "aws_access_key"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A key embedded in runbook prose rather than in a config block."
+    },
+    {
+      "id": "secret-aws-csv-row",
+      "group": "secrets",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "secret"
+      ],
+      "detectors": [
+        "aws_access_key"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A key in a tabular export, where surrounding punctuation differs from config syntax."
+    },
+    {
+      "id": "secret-aws-code-comment",
+      "group": "secrets",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "secret"
+      ],
+      "detectors": [
+        "aws_access_key"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A key in a source comment, with an acknowledgement that it should not be there."
+    },
+    {
+      "id": "secret-aws-ticket-body",
+      "group": "secrets",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "secret"
+      ],
+      "detectors": [
+        "aws_access_key"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A key inside a support ticket, which is how they reach a knowledge base."
+    },
+    {
+      "id": "secret-aws-env-file",
+      "group": "secrets",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "secret"
+      ],
+      "detectors": [
+        "aws_access_key"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "A key in a dotenv file alongside a benign variable."
+    },
+    {
+      "id": "secret-aws-ctx-plain",
+      "group": "secrets",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "secret"
+      ],
+      "detectors": [
+        "aws_access_key"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "The key with no surrounding text."
+    },
+    {
+      "id": "secret-aws-ctx-sentence",
+      "group": "secrets",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "secret"
+      ],
+      "detectors": [
+        "aws_access_key"
+      ],
+      "counter_signals": [],
+      "missing_counter_signals": [],
+      "reason": "The same key in a sentence. Counts as the same case, not a second one."
+    },
+    {
+      "id": "secret-aws-ctx-quoted",
+      "group": "secrets",
+      "expect": "sensitive",
+      "outcome": "true_positive",
+      "flagged": true,
+      "labels": [
+        "secret"
+      ],
+      "detectors": [
+        "aws_access_key"
+      ],
+      "counter_signals": [
+        "quoted_in_text"
+      ],
+      "missing_counter_signals": [],
+      "reason": "The same key in quotation marks. Still one case."
+    }
+  ]
+}

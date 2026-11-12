@@ -1,0 +1,46 @@
+{
+ "_about": "US DOJ Data Security Program (28 CFR Part 202): bulk thresholds, countries of concern, and a conservative mapping of VecShield detectors onto the rule's categories. Read from the eCFR text of Part 202 (versions dated 2025-04-08 and 2025-04-18, current on 2026-09-29).",
+ "_as_of": "2026-09-29",
+ "_sources": {
+  "part": "https://www.ecfr.gov/current/title-28/chapter-I/part-202",
+  "bulk": "https://www.ecfr.gov/current/title-28/chapter-I/part-202/subpart-B/section-202.205",
+  "countries_of_concern": "https://www.ecfr.gov/current/title-28/chapter-I/part-202/subpart-F/section-202.601",
+  "china_definition": "https://www.ecfr.gov/current/title-28/chapter-I/part-202/subpart-B/section-202.208",
+  "covered_personal_identifiers": "https://www.ecfr.gov/current/title-28/chapter-I/part-202/subpart-B/section-202.212",
+  "listed_identifier": "https://www.ecfr.gov/current/title-28/chapter-I/part-202/subpart-B/section-202.234"
+ },
+ "bulk_thresholds": {
+  "_rule": "28 CFR 202.205: 'more than' the number below, at any point in the preceding 12 months. A count equal to the number does not reach bulk.",
+  "human_genomic": {"more_than": 100, "unit": "U.S. persons", "cite": "28 CFR 202.205(a)", "label": "human genomic data"},
+  "human_omic_other": {"more_than": 1000, "unit": "U.S. persons", "cite": "28 CFR 202.205(a)", "label": "human 'omic data other than genomic"},
+  "biometric_identifiers": {"more_than": 1000, "unit": "U.S. persons", "cite": "28 CFR 202.205(b)", "label": "biometric identifiers"},
+  "precise_geolocation": {"more_than": 1000, "unit": "U.S. devices", "cite": "28 CFR 202.205(c)", "label": "precise geolocation data"},
+  "personal_health_data": {"more_than": 10000, "unit": "U.S. persons", "cite": "28 CFR 202.205(d)", "label": "personal health data"},
+  "personal_financial_data": {"more_than": 10000, "unit": "U.S. persons", "cite": "28 CFR 202.205(e)", "label": "personal financial data"},
+  "covered_personal_identifiers": {"more_than": 100000, "unit": "U.S. persons", "cite": "28 CFR 202.205(f)", "label": "covered personal identifiers"}
+ },
+ "countries_of_concern": {
+  "_rule": "28 CFR 202.601(a): China, Cuba, Iran, North Korea, Russia and Venezuela. 'China' includes the Special Administrative Regions of Hong Kong and Macau (28 CFR 202.208).",
+  "CN": "China", "HK": "China (Hong Kong SAR)", "MO": "China (Macau SAR)",
+  "CU": "Cuba", "IR": "Iran", "KP": "North Korea", "RU": "Russia", "VE": "Venezuela"
+ },
+ "detector_mapping": {
+  "_about": "Only detectors whose match is itself data of the category. Detectors that name a provider, a bank, a code system or a mention of a category (npi_context, us_dea_number_context, bank_routing, swift_bic_code, clinical_trial_nct, biometric_reference) are deliberately left out. Human 'omic data other than genomic and biometric identifiers have no detector: those categories are reported as not evaluated, never as below threshold.",
+  "human_genomic": ["genetic_variant_hgvs", "genetic_rsid", "genetic_sequence_run", "genetic_testing_context"],
+  "precise_geolocation": ["gps_coordinate"],
+  "personal_health_data": ["medical_record_context", "uk_nhs_context", "us_medicare_mbi_context", "icd_code_context", "ndc_code_context", "cpt_hcpcs_code_context", "loinc_code_context", "snomed_code_context", "rxnorm_code_context", "drg_code_context", "lab_accession_context"],
+  "personal_financial_data": ["credit_card", "credit_card_cvv_context", "credit_card_expiry_context", "card_track1_data", "card_track2_data", "card_track2_equivalent", "card_pin_block_context", "card_pin_context", "bank_account_context", "iban"],
+  "not_evaluated": ["human_omic_other", "biometric_identifiers"]
+ },
+ "listed_identifiers": {
+  "_about": "28 CFR 202.234 groups (a)-(h). A covered personal identifier is a listed identifier combined with another listed identifier or with other sensitive personal data (202.212(a)), except demographic/contact data linked only to demographic/contact data, and network/account-authentication/call-detail data linked only to each other (202.212(b)).",
+  "government_id": ["us_ssn", "us_ssn_spaced", "us_ssn_context", "us_itin", "us_driver_license_context", "passport_context", "tax_id_context", "uk_nino_context", "canada_sin_context", "india_pan", "india_aadhaar_context", "brazil_cpf_context", "china_resident_id", "singapore_nric", "italy_fiscal_code", "mexico_curp", "netherlands_bsn_context", "south_africa_id_context", "australia_tfn_context", "uk_utr_context", "france_nir_context", "poland_pesel_context", "germany_steuer_id_context", "spain_dni_nie_context", "sweden_personnummer_context", "norway_fodselsnummer_context", "finland_hetu_context", "denmark_cpr_context", "belgium_rrn_context", "ireland_ppsn_context", "portugal_nif_context", "greece_amka_context"],
+  "financial_account": ["credit_card", "bank_account_context", "iban"],
+  "device_id": ["mac_address", "imei_number"],
+  "demographic_contact": ["email", "us_phone", "intl_phone", "date_of_birth", "us_street_address", "us_zip_context", "zip_plus4", "secondary_address"],
+  "advertising_id": [],
+  "account_authentication": ["username_handle"],
+  "network_id": ["ipv4_address", "ipv6_address"],
+  "call_detail": []
+ }
+}

@@ -1,0 +1,292 @@
+{
+  "cases": [
+    {
+      "case_id": "case_01_pii_support_ticket",
+      "expected_vecshield_result": [
+        "PII classification",
+        "CCPA/CPRA personal-information policy violation"
+      ],
+      "points": [
+        {
+          "collection": "support_ticket_rag",
+          "customer_id": "cus_104928",
+          "id": 91,
+          "risk_tags": [
+            "pii",
+            "ccpa_personal_information",
+            "dsar_subject"
+          ],
+          "tenant_id": "enterprise_alpha"
+        }
+      ],
+      "remediation_talk_track": [
+        "Reduce raw-text retention",
+        "Enable deletion impact workflow",
+        "Gate future ingestion"
+      ],
+      "title": "PII in support tickets"
+    },
+    {
+      "case_id": "case_02_payment_data_billing",
+      "expected_vecshield_result": [
+        "PCI/cardholder-data finding",
+        "Critical policy violation"
+      ],
+      "points": [
+        {
+          "collection": "billing_disputes_rag",
+          "customer_id": "cus_104928",
+          "id": 33,
+          "risk_tags": [
+            "pci",
+            "cardholder_data",
+            "dsar_subject"
+          ],
+          "tenant_id": "enterprise_alpha"
+        }
+      ],
+      "remediation_talk_track": [
+        "Purge and re-embed",
+        "Tokenize upstream",
+        "Add pre-ingest card-data guardrail"
+      ],
+      "title": "Payment data in billing disputes"
+    },
+    {
+      "case_id": "case_03_credentials_mfa",
+      "expected_vecshield_result": [
+        "Credential-context finding",
+        "PII finding"
+      ],
+      "points": [
+        {
+          "collection": "support_ticket_rag",
+          "customer_id": "cus_104928",
+          "id": 92,
+          "risk_tags": [
+            "credential_pair",
+            "mfa_recovery_code",
+            "dsar_subject"
+          ],
+          "tenant_id": "enterprise_alpha"
+        }
+      ],
+      "remediation_talk_track": [
+        "Redact before embedding",
+        "Force password reset",
+        "Invalidate recovery code"
+      ],
+      "title": "Login credentials and MFA recovery codes"
+    },
+    {
+      "case_id": "case_04_api_keys_jwt_logs",
+      "expected_vecshield_result": [
+        "Secret finding",
+        "JWT/token finding",
+        "Critical policy violation"
+      ],
+      "points": [
+        {
+          "collection": "internal_runbooks_rag",
+          "customer_id": null,
+          "id": 23,
+          "risk_tags": [
+            "secret",
+            "jwt",
+            "api_key"
+          ],
+          "tenant_id": "internal_support"
+        }
+      ],
+      "remediation_talk_track": [
+        "Purge vectorized log",
+        "Rotate tokens",
+        "Block secrets at ingest"
+      ],
+      "title": "API keys and JWTs in forwarded logs"
+    },
+    {
+      "case_id": "case_05_private_key_runbook",
+      "expected_vecshield_result": [
+        "Private-key finding",
+        "Critical severity"
+      ],
+      "points": [
+        {
+          "collection": "internal_runbooks_rag",
+          "customer_id": null,
+          "id": 24,
+          "risk_tags": [
+            "secret",
+            "private_key"
+          ],
+          "tenant_id": "internal_support"
+        }
+      ],
+      "remediation_talk_track": [
+        "Purge runbook vector",
+        "Move key handling to vault-backed procedures"
+      ],
+      "title": "Private key in internal runbook"
+    },
+    {
+      "case_id": "case_06_cross_tenant_leakage",
+      "expected_vecshield_result": [
+        "Isolation finding when support search omits tenant filters"
+      ],
+      "points": [
+        {
+          "collection": "support_ticket_rag",
+          "customer_id": "cus_104002",
+          "id": 93,
+          "risk_tags": [
+            "tenant_bleed_canary"
+          ],
+          "tenant_id": "enterprise_alpha"
+        },
+        {
+          "collection": "support_ticket_rag",
+          "customer_id": "cus_104003",
+          "id": 94,
+          "risk_tags": [
+            "tenant_bleed_canary"
+          ],
+          "tenant_id": "enterprise_beta"
+        }
+      ],
+      "remediation_talk_track": [
+        "Enforce tenant filters server-side",
+        "Prefer tenant collections or namespaces"
+      ],
+      "title": "Cross-tenant support-search leakage canary"
+    },
+    {
+      "case_id": "case_07_stored_prompt_injection",
+      "expected_vecshield_result": [
+        "RAG integrity finding",
+        "Stored prompt-injection category"
+      ],
+      "points": [
+        {
+          "collection": "inbound_email_rag",
+          "customer_id": "cus_104004",
+          "id": 71,
+          "risk_tags": [
+            "stored_prompt_injection",
+            "exfiltration_instruction"
+          ],
+          "tenant_id": "enterprise_alpha"
+        }
+      ],
+      "remediation_talk_track": [
+        "Quarantine thread",
+        "Treat inbound content as untrusted retrieval content"
+      ],
+      "title": "Stored prompt injection in inbound email"
+    },
+    {
+      "case_id": "case_08_deletion_impact_maya_brooks",
+      "expected_vecshield_result": [
+        "DSAR impact report across multiple collections",
+        "Deletion/re-embedding manifest"
+      ],
+      "points": [
+        {
+          "collection": "support_ticket_rag",
+          "customer_id": "cus_104928",
+          "id": 91,
+          "risk_tags": [
+            "pii",
+            "ccpa_personal_information",
+            "dsar_subject"
+          ],
+          "tenant_id": "enterprise_alpha"
+        },
+        {
+          "collection": "billing_disputes_rag",
+          "customer_id": "cus_104928",
+          "id": 33,
+          "risk_tags": [
+            "pci",
+            "cardholder_data",
+            "dsar_subject"
+          ],
+          "tenant_id": "enterprise_alpha"
+        },
+        {
+          "collection": "support_ticket_rag",
+          "customer_id": "cus_104928",
+          "id": 92,
+          "risk_tags": [
+            "credential_pair",
+            "mfa_recovery_code",
+            "dsar_subject"
+          ],
+          "tenant_id": "enterprise_alpha"
+        },
+        {
+          "collection": "inbound_email_rag",
+          "customer_id": "cus_104928",
+          "id": 72,
+          "risk_tags": [
+            "dsar_subject",
+            "deletion_request"
+          ],
+          "tenant_id": "enterprise_alpha"
+        },
+        {
+          "collection": "crm_account_notes_rag",
+          "customer_id": "cus_104928",
+          "id": 39,
+          "risk_tags": [
+            "dsar_subject",
+            "crm_personal_info"
+          ],
+          "tenant_id": "enterprise_alpha"
+        }
+      ],
+      "remediation_talk_track": [
+        "Verify cleanup after erasure",
+        "Track subject copies in text and payload metadata"
+      ],
+      "title": "Deletion request impact across tickets, email, CRM, and billing"
+    },
+    {
+      "case_id": "case_09_runtime_query_abuse",
+      "expected_vecshield_result": [
+        "Bulk retrieval alert",
+        "Collection sweep alert",
+        "Enumeration alert"
+      ],
+      "points": [],
+      "remediation_talk_track": [
+        "Review support user access",
+        "Tune detector thresholds",
+        "Replay runtime_events.jsonl"
+      ],
+      "title": "Runtime query abuse by a support user"
+    },
+    {
+      "case_id": "case_10_ingest_firewall",
+      "expected_vecshield_result": [
+        "Normal chunk allowed",
+        "Card data warned or blocked",
+        "Prompt injection warned or blocked"
+      ],
+      "points": [],
+      "remediation_talk_track": [
+        "Run /ingest/gate before support content is embedded"
+      ],
+      "title": "Ingest firewall before embedding"
+    }
+  ],
+  "dataset_id": "acmedesk_support_email_v1",
+  "dimension": 384,
+  "primary_subject": {
+    "account_id": "acct_008812",
+    "customer_id": "cus_104928",
+    "email": "maya.brooks@example-customer.test",
+    "name": "Maya Brooks"
+  },
+  "synthetic_only": true
+}

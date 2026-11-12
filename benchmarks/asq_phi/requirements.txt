@@ -1,0 +1,14 @@
+# Pinned for reproducible ASQ-PHI benchmark runs.
+# The dataset is a single MIT-licensed text file fetched over HTTPS (stdlib
+# urllib) — the regex-mode harness needs only the local vecshield install.
+# No 'datasets'/HuggingFace dependency, unlike the other benchmarks.
+
+# Optional: NLP mode (Presidio + spaCy). Install the spaCy model separately:
+#   pip install 'vecshield[nlp]'
+#   python -m spacy download en_core_web_lg
+# presidio-analyzer>=2.2
+# spacy>=3.7
+
+# Optional: results notebook / dashboards.
+# pandas>=2.0
+# matplotlib>=3.8

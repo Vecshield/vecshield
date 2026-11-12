@@ -1,0 +1,129 @@
+{
+  "stores": [
+    {
+      "store_id": "support-email-qdrant",
+      "kind": "qdrant",
+      "conn": {
+        "url": "http://localhost:6333"
+      },
+      "tenant_field": "tenant_id",
+      "description": "Synthetic AcmeDesk support/email demo corpus in local Qdrant"
+    }
+  ],
+  "policies": [
+    {
+      "id": "demo-ccpa-personal-info",
+      "name": "Support personal information",
+      "description": "Demo policy instantiated from template ccpa-personal-info.",
+      "when": {
+        "category": "data_classification",
+        "requires_label": "pii"
+      },
+      "action": "tag_pii_and_enforce_erasure_path",
+      "severity": "medium",
+      "enabled": true,
+      "scope_store": "support-email-qdrant",
+      "scope_collection": null,
+      "template_id": "ccpa-personal-info"
+    },
+    {
+      "id": "demo-pci-pan",
+      "name": "Cardholder data in support RAG",
+      "description": "Demo policy instantiated from template pci-pan.",
+      "when": {
+        "category": "data_classification",
+        "requires_label": "pci"
+      },
+      "action": "remove_and_tokenize",
+      "severity": "critical",
+      "enabled": true,
+      "scope_store": "support-email-qdrant",
+      "scope_collection": null,
+      "template_id": "pci-pan"
+    },
+    {
+      "id": "demo-sec-secrets",
+      "name": "Secrets never embedded",
+      "description": "Demo policy instantiated from template sec-secrets.",
+      "when": {
+        "category": "data_classification",
+        "requires_label": "secret"
+      },
+      "action": "purge_and_rotate",
+      "severity": "critical",
+      "enabled": true,
+      "scope_store": "support-email-qdrant",
+      "scope_collection": null,
+      "template_id": "sec-secrets"
+    },
+    {
+      "id": "demo-soc2-injection",
+      "name": "Stored prompt injection",
+      "description": "Demo policy instantiated from template soc2-injection.",
+      "when": {
+        "category": "rag_integrity",
+        "min_severity": "high"
+      },
+      "action": "quarantine_chunks",
+      "severity": "high",
+      "enabled": true,
+      "scope_store": "support-email-qdrant",
+      "scope_collection": null,
+      "template_id": "soc2-injection"
+    },
+    {
+      "id": "demo-gdpr-cross-tenant",
+      "name": "Cross-tenant support leak",
+      "description": "Demo policy instantiated from template gdpr-cross-tenant.",
+      "when": {
+        "category": "isolation",
+        "min_severity": "high"
+      },
+      "action": "enforce_tenant_isolation",
+      "severity": "high",
+      "enabled": true,
+      "scope_store": "support-email-qdrant",
+      "scope_collection": null,
+      "template_id": "gdpr-cross-tenant"
+    }
+  ],
+  "allowlist": [],
+  "suppressions": [],
+  "alerting": {
+    "enabled": true,
+    "webhooks": [],
+    "min_severity": "high",
+    "console": true
+  },
+  "detectors": {
+    "cooldown_s": 45.0,
+    "bulk_volume": {
+      "enabled": true,
+      "threshold": 5,
+      "window_s": 300.0,
+      "severity": "high"
+    },
+    "collection_sweep": {
+      "enabled": true,
+      "fraction": 0.35,
+      "window_s": 300.0,
+      "severity": "high"
+    },
+    "enumeration": {
+      "enabled": true,
+      "sim_threshold": 0.97,
+      "run_length": 4,
+      "max_gap_s": 30.0,
+      "severity": "medium"
+    },
+    "rate_baseline": {
+      "enabled": true,
+      "window_s": 60.0,
+      "spike_factor": 4.0,
+      "warmup_samples": 3,
+      "min_rate": 4.0,
+      "alpha": 0.3,
+      "severity": "medium"
+    }
+  }
+}
