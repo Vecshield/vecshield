@@ -8,7 +8,12 @@ set -eu
 
 STATE=/data
 CONFIG="$STATE/vecshield.json"
-PASSWORD_FILE="$STATE/admin-password"
+
+# A fixed, memorable credential, because this estate is synthetic and the
+# console is published on loopback only. Override with VECSHIELD_DEMO_PASSWORD.
+# It must be at least 12 characters and must not be one of the obvious choices
+# ("admin", "password", "vecshield"), which the password policy refuses.
+DEMO_PASSWORD="${VECSHIELD_DEMO_PASSWORD:-vecshield-demo}"
 
 if [ ! -f "$CONFIG" ]; then
     echo "Seeding the demo estate (synthetic data, local Chroma, no network)..."
@@ -20,15 +25,38 @@ else
     echo "To start over: docker compose down -v && docker compose up"
 fi
 
-# The server refuses to bind beyond localhost while the bootstrap admin still
-# has the default password. Mint a strong one on first boot instead of shipping
-# a known credential, and keep it so restarts do not change it.
-if [ ! -f "$PASSWORD_FILE" ]; then
-    python -c "import secrets; print(secrets.token_urlsafe(18))" > "$PASSWORD_FILE"
-    chmod 600 "$PASSWORD_FILE"
-fi
-VECSHIELD_INITIAL_ADMIN_PASSWORD="$(cat "$PASSWORD_FILE")"
-export VECSHIELD_INITIAL_ADMIN_PASSWORD
+# Create the admin account up front, and do its first-sign-in password change
+# here rather than making you do it in the browser.
+#
+# The product always marks a freshly bootstrapped admin "must change password",
+# which is right for a real deployment and pure friction for a demo you may
+# reset several times an hour. This clears it the same way a person would --
+# through the public change_password API, from a throwaway bootstrap password
+# to the demo one -- so nothing about the product's own rules is bypassed or
+# patched out.
+python - "$CONFIG" "$STATE/state" "$DEMO_PASSWORD" <<'PY'
+import secrets
+import sys
+
+from vecshield_platform.api.state import resolve_state_paths
+from vecshield_platform.api.users import UserStore
+
+config_path, state_dir, demo_password = sys.argv[1], sys.argv[2], sys.argv[3]
+users_db = resolve_state_paths(config_path, state_dir).users_db
+
+throwaway = secrets.token_urlsafe(24)
+store = UserStore(users_db, initial_admin_password=throwaway)
+try:
+    admin = store.get_user("admin")
+    if admin is not None and admin.must_change_password:
+        store.change_password("admin", throwaway, demo_password)
+        print("Admin account ready; the first-sign-in password change is done.")
+    else:
+        # A previous run already set it, or someone changed it deliberately.
+        print("Admin account already set up; leaving its password alone.")
+finally:
+    store.close()
+PY
 
 cat <<BANNER
 
@@ -36,12 +64,16 @@ cat <<BANNER
   ----------------------
   URL       http://127.0.0.1:8088
   Username  admin
-  Password  $VECSHIELD_INITIAL_ADMIN_PASSWORD
+  Password  $DEMO_PASSWORD
 
-  The password is generated on first boot and kept in the demo volume.
-  Read it again with:  docker compose exec vecshield cat /data/admin-password
+  This is a published, well-known demo password, and the estate behind it is
+  entirely synthetic. Compose publishes the console on 127.0.0.1 only. Do not
+  bind this container to a public address, and do not reuse these settings for
+  a real deployment -- see docs/deployment.md for that.
 
-  All data in this estate is synthetic. Walkthrough: demo/WALKTHROUGH.md
+  Change it with:  VECSHIELD_DEMO_PASSWORD=... docker compose up
+
+  Walkthrough: demo/WALKTHROUGH.md
 
 BANNER
 

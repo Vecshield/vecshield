@@ -29,6 +29,10 @@ services:
       # extra adds recall on names, addresses and locations; see
       # docs/nlp_models.md for running the demo with it.
       VECSHIELD_NLP_MODE: disabled
+      # Declared so a value set on the host reaches the container; Compose does
+      # not forward the environment otherwise. Empty means "use the default",
+      # which the entrypoint resolves to `vecshield-demo`.
+      VECSHIELD_DEMO_PASSWORD: ${VECSHIELD_DEMO_PASSWORD:-}
     healthcheck:
       test: ["CMD", "python", "-c",
              "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8088/healthz', timeout=3).status == 200 else 1)"]

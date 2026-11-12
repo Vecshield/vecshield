@@ -53,9 +53,9 @@ cd vecshield/demo
 docker compose up --build
 ```
 
-Then open <http://127.0.0.1:8088>. The container prints a generated admin
-password on first boot. Details and a guided walkthrough:
-[`demo/README.md`](demo/README.md).
+Then open <http://127.0.0.1:8088> and sign in as `admin` / `vecshield-demo`.
+The data is synthetic and the console is published on loopback only. Details
+and a guided walkthrough: [`demo/README.md`](demo/README.md).
 
 ## Install
 

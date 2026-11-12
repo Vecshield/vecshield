@@ -12,32 +12,33 @@ docker compose up --build
 ```
 
 First run takes a few minutes: it builds the image, seeds the estate, and runs
-a full assessment against every store. When it is ready the container prints a
-banner with a generated admin password:
+a full assessment against every store. Then open <http://127.0.0.1:8088> and
+sign in:
 
-```
-  VecShield demo console
-  ----------------------
-  URL       http://127.0.0.1:8088
-  Username  admin
-  Password  <generated on first boot>
-```
+| | |
+|---|---|
+| **Username** | `admin` |
+| **Password** | `vecshield-demo` |
 
-Open <http://127.0.0.1:8088> and sign in. **You will be asked to change the
-password immediately** — the bootstrap account is forced to rotate on first
-sign-in, and the demo does not make an exception for itself.
+You land straight in the console. The demo does the first-sign-in password
+change for you, through the same public API a person would use, so a reset does
+not cost you a trip through the password form.
 
-Lost the banner? `docker compose exec vecshield cat /data/admin-password`.
+Pick your own with `VECSHIELD_DEMO_PASSWORD=... docker compose up`. It has to
+be at least 12 characters, and the policy refuses the obvious ones (`admin`,
+`password`, `vecshield`).
+
+> **This password is published in a public repository.** That is fine here —
+> the estate is invented and Compose publishes the console on `127.0.0.1` only
+> — and it is not fine anywhere else. The console can delete vectors. Do not
+> bind this container to a public address, and do not carry these settings into
+> a real install; see [deployment](../docs/deployment.md) for that.
 
 | Command | Effect |
 |---|---|
 | `docker compose up` | Start. Re-seeding is skipped if an estate already exists, so triage you did survives a restart. |
 | `docker compose down` | Stop, keeping the estate. |
 | `docker compose down -v` | Stop and discard the estate, so the next start seeds afresh. |
-
-The console is published on `127.0.0.1` only. It is an admin interface that can
-delete vectors; do not bind it to a public address without real authentication
-in front of it. See [deployment](../docs/deployment.md) for a real install.
 
 ## Run it without Docker
 

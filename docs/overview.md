@@ -285,10 +285,10 @@ cd demo
 docker compose up --build
 ```
 
-The console is then at `127.0.0.1:8088`, with every finding, case and evidence
-record already populated, and the container prints a generated admin password
-on first boot. A test in CI asserts that every scenario still fires, so the
-demo cannot quietly rot. See [`demo/README.md`](../demo/README.md).
+The console is then at `127.0.0.1:8088`, signed in as `admin` /
+`vecshield-demo`, with every finding, case and evidence record already
+populated. A test in CI asserts that every scenario still fires, so the demo
+cannot quietly rot. See [`demo/README.md`](../demo/README.md).
 
 ## Deployment
 
