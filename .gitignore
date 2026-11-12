@@ -84,3 +84,6 @@ benchmark/results.nlp.json
 # artefact, not build output, so it must survive the `dist/` rule above.
 !vecshield_platform/api/dashboard/dist/
 !vecshield_platform/api/dashboard/dist/**
+
+# Config-store advisory locks are runtime state.
+*.json.lock

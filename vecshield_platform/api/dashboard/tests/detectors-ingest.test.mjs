@@ -4,7 +4,7 @@ import test from "node:test";
 
 import { JSDOM } from "jsdom";
 
-// The Detectors and Ingest redesign (planning/vecshield-ui-ux-plan.md §17).
+// The Detectors and Ingest screens.
 // Each test boots the shipped console in a real DOM against a stubbed API and
 // follows one journey: tune a rule and save it deliberately, or load an
 // example, run a check, and read what the result does and does not establish.
