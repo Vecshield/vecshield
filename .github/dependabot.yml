@@ -8,6 +8,23 @@ updates:
     directory: "/vecshield_platform/api/dashboard"
     schedule: { interval: weekly }
     open-pull-requests-limit: 3
+    ignore:
+      # jsdom is pinned exactly. Both 30.1.3 and 31.0.0 fail one console test,
+      # "cancelling an inline form closes it and returns focus to its button"
+      # (tests/batch3.test.mjs): after the inline form opens, activeElement is
+      # still the route heading rather than the form's first radio.
+      #
+      # The cause is not yet understood. Checked and ruled out: the selector in
+      # focusFirstField matches the radio identically on both versions, and
+      # focus() on a detached element behaves identically on both. So it is
+      # something about the harness context, not an obvious API change.
+      #
+      # It may well be a real focus bug in the console that jsdom 30.1.0
+      # happens to mask, which would make it an accessibility defect worth
+      # fixing rather than a test to appease. Until someone reproduces it
+      # properly the pin holds, and Dependabot stays quiet instead of
+      # reopening the same red pull request every week.
+      - dependency-name: "jsdom"
   - package-ecosystem: github-actions
     directory: "/"
     schedule: { interval: weekly }
