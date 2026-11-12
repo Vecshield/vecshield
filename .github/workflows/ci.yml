@@ -222,7 +222,7 @@ jobs:
 
       - name: Cache model wheels
         # Keyed on the catalog: a changed pin or hash fetches afresh.
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ${{ env.NLP_WHEELHOUSE }}
           key: nlp-wheels-${{ hashFiles('vecshield_platform/nlp_models.py') }}
