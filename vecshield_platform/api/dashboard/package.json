@@ -10,7 +10,7 @@
     "check": "node --check dist/assets/dashboard.js && node --check dist/assets/theme.js"
   },
   "devDependencies": {
-    "axe-core": "4.13.0",
+    "axe-core": "4.14.0",
     "jsdom": "30.1.0"
   }
 }
