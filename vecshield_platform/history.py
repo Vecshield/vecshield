@@ -1594,7 +1594,13 @@ class ScanHistory:
         status: Optional[str] = None,
         limit: int = 50,
         offset: int = 0,
+        summary: bool = False,
     ) -> list[dict[str, Any]]:
+        """Persisted jobs, newest first.
+
+        With ``summary`` each result is cut to the id of the record it saved
+        (see ``summarize_job_result``), which is all a list of runs shows.
+        """
         clauses: list[str] = []
         params: list = []
         if kind:
@@ -1608,7 +1614,11 @@ class ScanHistory:
         params += [limit, offset]
         with self._lock:
             rows = self._conn.execute(sql, params).fetchall()
-        return [_async_job_row(r) for r in rows]
+        jobs = [_async_job_row(r) for r in rows]
+        if summary:
+            for job in jobs:
+                job["result"] = summarize_job_result(job.get("result"))
+        return jobs
 
     def close(self) -> None:
         with self._lock:
@@ -1650,6 +1660,18 @@ def _finding_row(row: sqlite3.Row) -> dict[str, Any]:
     }
     d["suppressed"] = bool(d.get("suppressed"))
     return d
+
+
+def summarize_job_result(result: Any) -> Optional[dict[str, Any]]:
+    """The part of a job's result a list of jobs needs: what it produced.
+
+    A result can be a whole audit. A list only links each run to the record it
+    saved, so it carries that record's ``id``; the full result is one
+    ``GET /admin/jobs/{id}`` away.
+    """
+    if isinstance(result, dict) and result.get("id") is not None:
+        return {"id": result["id"]}
+    return None
 
 
 def _async_job_row(row: sqlite3.Row) -> dict[str, Any]:

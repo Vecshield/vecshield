@@ -7,9 +7,14 @@ thread-pool-backed job queue so those endpoints can accept the work, return a
 for status and result.
 
 Design notes:
-  * The queue keeps an authoritative in-memory record per job (fast, holds the
-    native result object) and best-effort-persists each state change to
+  * The queue keeps an authoritative in-memory record per live job (fast, holds
+    the native result object) and best-effort-persists each state change to
     ``ScanHistory`` so status/result survive across requests and restarts.
+  * A finished job leaves memory once its final state is safely in history,
+    and reads fall through to history from then on. A result can be a whole
+    audit, so keeping every finished job in memory grew the process for as long
+    as it ran. Without history (or when the final save fails) finished jobs
+    stay in memory, capped at ``MAX_FINISHED_IN_MEMORY``, oldest out first.
   * Work is a callable held in this process, so a restart cannot resume it. Each
     queue stamps its jobs with a runner id and heartbeats the unfinished ones;
     on startup, and again on every heartbeat, it reconciles rows that no live
@@ -33,6 +38,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 from typing import Any, Callable, Optional
 
+from vecshield_platform.history import summarize_job_result
 from vecshield_platform.progress import ProgressReporter, bind, reset
 
 logger = logging.getLogger(__name__)
@@ -40,6 +46,9 @@ logger = logging.getLogger(__name__)
 
 def _now(offset_s: float = 0.0) -> str:
     return (datetime.now(timezone.utc) + timedelta(seconds=offset_s)).isoformat()
+
+
+_LIVE_STATES = ("queued", "running")
 
 
 class JobQueue:
@@ -50,6 +59,8 @@ class JobQueue:
     #: Floor for that window, so a short (or disabled) heartbeat interval can
     #: never make a job another process is running look abandoned.
     MIN_STALE_S = 60.0
+    #: Finished jobs kept in memory when they cannot be handed to history.
+    MAX_FINISHED_IN_MEMORY = 200
 
     def __init__(self, *, history: Any = None, max_workers: int = 2,
                  heartbeat_s: float = 15.0, reconcile: bool = True):
@@ -166,12 +177,35 @@ class JobQueue:
             result = fn()
         except Exception as exc:  # noqa: BLE001 - report, never crash the worker
             logger.exception("async job %s (%s) failed", job_id, self._kind(job_id))
-            self._update(job_id, status="failed", finished_at=_now(), error=str(exc))
+            saved = self._update(job_id, status="failed", finished_at=_now(), error=str(exc))
+            self._retire(job_id, saved=saved)
             return
         finally:
             reporter.flush()
             reset(previous)
-        self._update(job_id, status="succeeded", finished_at=_now(), result=result)
+        saved = self._update(job_id, status="succeeded", finished_at=_now(), result=result)
+        self._retire(job_id, saved=saved)
+
+    def _retire(self, job_id: str, *, saved: bool) -> None:
+        """Release a finished job's memory.
+
+        A job whose final state reached history is dropped; ``get`` reads it
+        from there. One that did not stays readable here, but only the newest
+        ``MAX_FINISHED_IN_MEMORY`` finished jobs are kept. Live jobs are never
+        evicted: the heartbeat claims them by reading this map.
+        """
+        with self._lock:
+            if saved:
+                self._jobs.pop(job_id, None)
+                return
+            finished = [rec for rec in self._jobs.values()
+                        if rec["status"] not in _LIVE_STATES]
+            excess = len(finished) - self.MAX_FINISHED_IN_MEMORY
+            if excess <= 0:
+                return
+            finished.sort(key=lambda rec: rec.get("finished_at") or rec["created_at"])
+            for rec in finished[:excess]:
+                self._jobs.pop(rec["id"], None)
 
     # ------------------------------------------------------------------ #
     # State updates + persistence                                          #
@@ -182,15 +216,16 @@ class JobQueue:
             rec = self._jobs.get(job_id)
             return rec.get("kind") if rec else None
 
-    def _update(self, job_id: str, **changes: Any) -> None:
+    def _update(self, job_id: str, **changes: Any) -> bool:
+        """Apply ``changes`` to a job; True when the new state reached history."""
         with self._lock:
             rec = self._jobs.get(job_id)
             if rec is None:
-                return
+                return False
             rec.update(changes)
             rec["heartbeat_at"] = _now()
             snapshot = dict(rec)
-        self._persist(snapshot)
+        return self._persist(snapshot)
 
     def _set_progress(self, job_id: str, progress: dict[str, Any], *, persist: bool) -> None:
         """Write live progress onto the job. Chunk ticks may skip SQLite."""
@@ -204,15 +239,18 @@ class JobQueue:
         if persist:
             self._persist(snapshot)
 
-    def _persist(self, record: dict[str, Any]) -> None:
+    def _persist(self, record: dict[str, Any]) -> bool:
+        """Save ``record`` to history; True only when it was written."""
         if self._history is None:
-            return
+            return False
         try:
             self._history.save_async_job(record)
         except Exception:  # noqa: BLE001 - persistence is best-effort
             logger.warning(
                 "failed to persist async job %s", record.get("id"), exc_info=True
             )
+            return False
+        return True
 
     # ------------------------------------------------------------------ #
     # Read                                                                 #
@@ -236,10 +274,12 @@ class JobQueue:
         status: Optional[str] = None,
         limit: int = 50,
         offset: int = 0,
+        summary: bool = False,
     ) -> list[dict[str, Any]]:
+        """Jobs, newest first. ``summary`` cuts each result to its record id."""
         if self._history is not None:
             return self._history.list_async_jobs(
-                kind=kind, status=status, limit=limit, offset=offset
+                kind=kind, status=status, limit=limit, offset=offset, summary=summary
             )
         with self._lock:
             jobs = sorted(
@@ -249,7 +289,11 @@ class JobQueue:
             jobs = [j for j in jobs if j["kind"] == kind]
         if status:
             jobs = [j for j in jobs if j["status"] == status]
-        return [dict(j) for j in jobs[offset : offset + limit]]
+        page = [dict(j) for j in jobs[offset : offset + limit]]
+        if summary:
+            for job in page:
+                job["result"] = summarize_job_result(job.get("result"))
+        return page
 
     def shutdown(self, *, wait: bool = False) -> None:
         self._stop.set()

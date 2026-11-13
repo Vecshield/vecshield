@@ -5602,12 +5602,19 @@ def create_app(
     def list_jobs_endpoint(
         kind: Optional[str] = None,
         status: Optional[str] = None,
-        limit: int = 50,
-        offset: int = 0,
+        limit: int = Query(50, ge=1, le=500),
+        offset: int = Query(0, ge=0),
         principal: "Principal" = Depends(require_principal),
     ) -> dict:
+        """Background jobs, newest first.
+
+        Each ``result`` is summarized to ``{"id": ...}``, the record the run
+        saved; a full result can be a whole audit. ``GET /admin/jobs/{id}``
+        returns it in full.
+        """
         return {"jobs": [_visible_job(j, principal) for j in
-                         jobs.list(kind=kind, status=status, limit=limit, offset=offset)]}
+                         jobs.list(kind=kind, status=status, limit=limit, offset=offset,
+                                   summary=True)]}
 
     @app.get("/admin/jobs/{job_id}")
     def get_job_endpoint(job_id: str,
@@ -5651,8 +5658,8 @@ def create_app(
         rule: Optional[str] = None,
         principal: Optional[str] = None,
         since: Optional[float] = None,
-        limit: int = 200,
-        offset: int = 0,
+        limit: int = Query(200, ge=1, le=1000),
+        offset: int = Query(0, ge=0),
         actor: str = Depends(require_auth),
     ) -> dict:
         """List persisted runtime alerts, most recent first, with filters."""
