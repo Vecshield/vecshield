@@ -909,6 +909,7 @@ def create_app(
         PlainTextResponse,
     )
     from fastapi.staticfiles import StaticFiles
+    from starlette.middleware.gzip import GZipMiddleware
 
     from vecshield_platform import metrics
     from vecshield_platform.api.middleware import (
@@ -1676,7 +1677,39 @@ def create_app(
         # some platforms (Windows, 3.10), and with `nosniff` on every response
         # a font served as an unknown type would be refused by the browser.
         mimetypes.add_type("font/woff2", ".woff2")
-        app.mount("/static", _RevalidatingStaticFiles(directory=_STATIC_DIR), name="static")
+
+        class _CompressedStatic:
+            """Gzip the console's text assets on the way out.
+
+            dashboard.js and dashboard.css are about 1 MB together and shrink
+            by roughly three quarters. Only this mount is compressed: these
+            files are public and identical for everyone, so there is no secret
+            in them for a compression side channel (BREACH) to recover. The
+            JSON API is deliberately left uncompressed.
+
+            Two kinds of request pass through untouched. A Range request would
+            get a gzipped slice whose Content-Range describes the uncompressed
+            file. Fonts and images are already compressed, so gzipping them
+            costs CPU and saves nothing.
+            """
+
+            _ALREADY_COMPRESSED = (".woff2", ".png")
+
+            def __init__(self, inner: Any) -> None:
+                self._inner = inner
+                self._gzip = GZipMiddleware(inner, minimum_size=1024, compresslevel=6)
+
+            async def __call__(self, scope: Any, receive: Any, send: Any) -> None:
+                if (scope["type"] == "http"
+                        and not scope["path"].lower().endswith(self._ALREADY_COMPRESSED)
+                        and not any(name == b"range" for name, _ in scope["headers"])):
+                    await self._gzip(scope, receive, send)
+                else:
+                    await self._inner(scope, receive, send)
+
+        app.mount("/static",
+                  _CompressedStatic(_RevalidatingStaticFiles(directory=_STATIC_DIR)),
+                  name="static")
 
         @app.get("/", response_class=HTMLResponse)
         def index() -> Any:
