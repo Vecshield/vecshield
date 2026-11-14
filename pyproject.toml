@@ -59,12 +59,12 @@ nlp = ["presidio-analyzer>=2.2", "spacy>=3.7"]
 # defence in depth behind the model's hash pin. The model wheel itself is
 # installed with `vecshield-platform nlp install`; see docs/nlp_models.md.
 nlp-trf = ["presidio-analyzer>=2.2,<2.3", "spacy>=3.8,<3.9",
-           "spacy-curated-transformers>=0.2.2,<1.0", "torch>=2.6,<2.15"]
+           "spacy-curated-transformers>=0.2.2,<3.0", "torch>=2.6,<2.15"]
 # Deprecated alias of nlp-trf, kept so existing install commands keep working.
 # It used to pull spacy-transformers for en_core_web_hftrf, which no released
 # spacy-transformers can load (see docs/nlp_models.md).
 nlp-transformer = ["presidio-analyzer>=2.2,<2.3", "spacy>=3.8,<3.9",
-                   "spacy-curated-transformers>=0.2.2,<1.0", "torch>=2.6,<2.15"]
+                   "spacy-curated-transformers>=0.2.2,<3.0", "torch>=2.6,<2.15"]
 # Runtime for the slim image's model (en_core_web_lg): no PyTorch.
 nlp-lg = ["presidio-analyzer>=2.2,<2.3", "spacy>=3.8,<3.9"]
 # Everything the bundled demo estate needs. Seeds into a local Chroma
