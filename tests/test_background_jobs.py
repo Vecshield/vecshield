@@ -103,6 +103,123 @@ def test_get_unknown_job_returns_none():
         q.shutdown(wait=True)
 
 
+# ------------------------- finished-job memory --------------------------- #
+
+def test_finished_jobs_leave_memory_once_saved_and_stay_readable():
+    """A result can be a whole audit; memory must not keep every one ever run."""
+    hist = ScanHistory()
+    q = JobQueue(history=hist)
+    try:
+        ok = q.submit("test", lambda: {"id": "a1", "big": list(range(100))})
+        bad = q.submit("test", lambda: 1 / 0)
+        q.shutdown(wait=True)  # both workers, including their cleanup, are done
+
+        assert q._jobs == {}
+        rec = q.get(ok)
+        assert rec["status"] == "succeeded"
+        assert rec["result"] == {"id": "a1", "big": list(range(100))}
+        failed = q.get(bad)
+        assert failed["status"] == "failed"
+        assert "division by zero" in failed["error"]
+    finally:
+        q.shutdown(wait=True)
+        hist.close()
+
+
+def test_without_history_only_the_newest_finished_jobs_are_kept():
+    q = JobQueue(max_workers=1)
+    q.MAX_FINISHED_IN_MEMORY = 3
+    try:
+        ids = [q.submit("test", lambda i=i: {"id": i}) for i in range(5)]
+        q.shutdown(wait=True)
+
+        assert set(q._jobs) == set(ids[-3:])
+        assert q.get(ids[0]) is None
+        assert q.get(ids[-1])["result"] == {"id": 4}
+    finally:
+        q.shutdown(wait=True)
+
+
+class _UnwritableHistory:
+    """History whose writes always fail, as a full or locked disk would."""
+
+    def save_async_job(self, record):
+        raise OSError("disk full")
+
+    def get_async_job(self, job_id):
+        return None
+
+    def touch_async_jobs(self, *args, **kwargs):
+        pass
+
+
+def test_a_job_whose_final_state_was_not_saved_stays_in_memory():
+    q = JobQueue(history=_UnwritableHistory(), reconcile=False, heartbeat_s=0)
+    try:
+        job_id = q.submit("test", lambda: {"id": "kept"})
+        q.shutdown(wait=True)
+
+        assert job_id in q._jobs
+        assert q.get(job_id)["result"] == {"id": "kept"}
+    finally:
+        q.shutdown(wait=True)
+
+
+def test_a_running_job_is_never_evicted():
+    q = JobQueue(max_workers=2)
+    q.MAX_FINISHED_IN_MEMORY = 0
+    gate = threading.Event()
+    started = threading.Event()
+
+    def blocker():
+        started.set()
+        gate.wait(5.0)
+        return {"id": "slow"}
+
+    try:
+        slow = q.submit("test", blocker)
+        assert started.wait(2.0), "worker never started"
+        # With a cap of zero the fast job is evicted the moment it finishes.
+        fast = q.submit("test", lambda: {"id": "fast"})
+        deadline = time.time() + 5.0
+        while fast in q._jobs and time.time() < deadline:
+            time.sleep(0.01)
+        assert fast not in q._jobs
+        assert q.get(slow)["status"] == "running"
+    finally:
+        gate.set()
+        q.shutdown(wait=True)
+
+
+def test_list_summary_cuts_each_result_to_its_record_id():
+    hist = ScanHistory()
+    q = JobQueue(history=hist)
+    try:
+        with_id = q.submit("test", lambda: {"id": "audit-1", "findings": [1, 2, 3]})
+        without_id = q.submit("test", lambda: {"findings": []})
+        q.shutdown(wait=True)
+
+        full = {j["id"]: j["result"] for j in q.list()}
+        assert full[with_id] == {"id": "audit-1", "findings": [1, 2, 3]}
+
+        summary = {j["id"]: j["result"] for j in q.list(summary=True)}
+        assert summary == {with_id: {"id": "audit-1"}, without_id: None}
+    finally:
+        q.shutdown(wait=True)
+        hist.close()
+
+
+def test_list_summary_without_history():
+    q = JobQueue()
+    try:
+        job_id = q.submit("test", lambda: {"id": "scan-9", "rows": [0] * 50})
+        _wait_for(q, job_id, "succeeded")
+        assert q.list(summary=True)[0]["result"] == {"id": "scan-9"}
+        assert q.list()[0]["result"]["rows"] == [0] * 50
+    finally:
+        q.shutdown(wait=True)
+
+
 # ------------------------------- API wiring ------------------------------ #
 
 pytest.importorskip("fastapi")
@@ -180,6 +297,33 @@ def test_admin_jobs_list_includes_submitted_job(client):
 
 def test_get_unknown_job_returns_404(client):
     assert client.get("/admin/jobs/nope").status_code == 404
+
+
+def test_admin_jobs_list_carries_only_the_saved_record_id(client):
+    """The Runs list links each run to its record; the audit itself stays put."""
+    r = client.post("/stores/prod/audit?background=true", json={})
+    job_id = r.json()["job_id"]
+    full = _poll_job(client, job_id)
+    assert "summary" in full["result"] and full["result"]["id"]
+
+    listed = {j["id"]: j for j in client.get("/admin/jobs").json()["jobs"]}
+    assert listed[job_id]["result"] == {"id": full["result"]["id"]}
+    # The full result is still one request away.
+    assert client.get(f"/admin/jobs/{job_id}").json()["result"] == full["result"]
+
+
+@pytest.mark.parametrize("query", ["limit=-1", "limit=0", "limit=501", "offset=-1"])
+def test_admin_jobs_rejects_an_unbounded_page(client, query):
+    assert client.get(f"/admin/jobs?{query}").status_code == 422
+
+
+@pytest.mark.parametrize("query", ["limit=-1", "limit=1001", "offset=-1"])
+def test_runtime_alerts_rejects_an_unbounded_page(client, query):
+    assert client.get(f"/runtime/alerts?{query}").status_code == 422
+
+
+def test_runtime_alerts_accepts_the_console_page_size(client):
+    assert client.get("/runtime/alerts?limit=200").status_code == 200
 
 
 def test_datasource_scan_background(client, tmp_path):

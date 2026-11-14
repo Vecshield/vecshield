@@ -9,6 +9,22 @@ Changes to the detection engine specifically are also tracked in
 
 ## [Unreleased]
 
+### Changed
+
+- `GET /admin/jobs` returns each job's `result` summarized to `{"id": ...}`,
+  the record the run saved. A full result can be a whole audit, and the Runs
+  list only links to it. `GET /admin/jobs/{id}` still returns the full result.
+- `GET /admin/jobs` accepts `limit` from 1 to 500 and `GET /runtime/alerts`
+  from 1 to 1000; `offset` must not be negative. Out-of-range values are a
+  `422` instead of an unbounded read.
+
+### Fixed
+
+- Finished background jobs no longer stay in server memory for the life of the
+  process. A job leaves memory once its final state is saved to history, and
+  is read from there. Without history, only the newest 200 finished jobs are
+  kept.
+
 ## [0.1.0]
 
 First open-source release, under Apache-2.0.
